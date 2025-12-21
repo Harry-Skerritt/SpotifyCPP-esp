@@ -1,9 +1,9 @@
 //
 // Created by Harry Skerritt on 20/12/2025.
 //
-#include <spotify/Auth.hpp>
-#include <spotify/Tools.hpp>
-#include <spotify/AuthServer.h>
+#include <spotify/auth/Auth.hpp>
+#include <spotify/util/Tools.hpp>
+#include <spotify/auth/AuthServer.h>
 #include <cstdlib>
 
 int main() {

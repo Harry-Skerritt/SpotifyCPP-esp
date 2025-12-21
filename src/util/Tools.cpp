@@ -2,7 +2,7 @@
 // Created by Harry Skerritt on 20/12/2025.
 //
 
-#include "spotify/Tools.hpp"
+#include "spotify/util/Tools.hpp"
 
 // --- WEB TOOLS ---
 std::string Spotify::WebTools::generateRandomState(size_t length) {
@@ -65,13 +65,59 @@ int Spotify::WebTools::extractIntValue(const std::string &json, const std::strin
 }
 
 std::string Spotify::WebTools::getHttpStatusText(int code)
-
 {
-    auto it = RFC2616_Table.find(code);
-    if (it != RFC2616_Table.end()) {
-        return it->second;
+    RFC2616_Code response_code = static_cast<RFC2616_Code>(code);
+
+    switch (response_code) {
+        case (RFC2616_Code::OK):
+            return "OK";
+
+        case (RFC2616_Code::CREATED):
+            return "Created";
+
+        case (RFC2616_Code::ACCEPTED):
+            return "Accepted";
+
+        case (RFC2616_Code::NO_CONTENT):
+            return "No Content";
+
+        case (RFC2616_Code::NOT_MODIFIED):
+            return "Not Modified";
+
+        case (RFC2616_Code::BAD_REQUEST):
+            return "Bad Request";
+
+        case (RFC2616_Code::UNAUTHORIZED):
+            return "Unauthorized";
+
+        case (RFC2616_Code::FORBIDDEN):
+            return "Forbidden";
+
+        case (RFC2616_Code::NOT_FOUND):
+            return "Not Found";
+
+        case (RFC2616_Code::TOO_MANY_REQUESTS):
+            return "Too Many Requests";
+
+        case (RFC2616_Code::INTERNAL_SERVER_ERROR):
+            return "Internal Server Error";
+
+        case (RFC2616_Code::BAD_GATEWAY):
+            return "Bad Gateway";
+
+        case (RFC2616_Code::SERVICE_UNAVAILABLE):
+            return "Service Unavailable";
+
+        case(RFC2616_Code::NOT_IMPLEMENTED):
+            return "Not Implemented";
+
+        case (RFC2616_Code::NETWORK_ERROR):
+            return "Network Error";
+
+        default:
+            return "Unknown Status (" + std::to_string(code) + ")";
+
     }
-    return "Unknown Status (" + std::to_string(code) + ")";
 }
 
 // --- TOOLS ---

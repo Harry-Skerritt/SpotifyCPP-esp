@@ -1,0 +1,28 @@
+//
+// Created by Harry Skerritt on 21/12/2025.
+//
+
+#ifndef HTTP_H
+#define HTTP_H
+
+#pragma once
+
+#include <string>
+#include "Types.h"
+
+
+namespace HTTP {
+    struct Result {
+        Spotify::RFC2616_Code code;
+        std::string body;
+    };
+
+
+    Result get(const std::string& url, const std::string& bearer);
+    Result post(const std::string& url, const std::string& bearer, const std::string& body);
+
+}
+
+
+
+#endif //HTTP_H

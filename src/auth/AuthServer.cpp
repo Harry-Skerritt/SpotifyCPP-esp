@@ -4,7 +4,7 @@
 
 #include "httplib.h"
 
-#include "spotify/AuthServer.h"
+#include "spotify/auth/AuthServer.h"
 
 
 void Spotify::AuthServer::openBrowser(const std::string &url) {

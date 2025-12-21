@@ -14,9 +14,9 @@
 
 #include <curl/curl.h>
 
-#include "spotify/Tools.hpp"
-#include "spotify/Types.h"
-#include "spotify/base64.hpp"
+#include "spotify/util/Tools.hpp"
+#include "spotify/util/Types.h"
+#include "spotify/util/base64.hpp"
 
 
 namespace Spotify {

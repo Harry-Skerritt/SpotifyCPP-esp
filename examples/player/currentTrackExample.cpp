@@ -1,14 +1,16 @@
 //
-// Created by Harry Skerritt on 18/12/2025.
+// Created by Harry Skerritt on 21/12/2025.
 //
-
 #include <spotify/auth/Auth.hpp>
 #include <spotify/util/Tools.hpp>
 #include <spotify/auth/AuthServer.h>
 #include <cstdlib>
 
-int main() {
+#include "spotify/core/Client.hpp"
 
+
+int main () {
+    // --- ENV ---
     // Getting client values from .env
     std::string env_path = "/Volumes/Data/Code/C++/2025/SpotifyAPILib/.env";
     Spotify::Tools::loadEnv(env_path);
@@ -21,49 +23,31 @@ int main() {
         return 1;
     }
 
+    // --- Authorising --- //Todo: Minimise this for examples
     // Creating the client
     Spotify::ClientCredentials credentials(client_key, client_secret);
     Spotify::Auth auth_client(credentials);
 
-    // Generate the auth url
+    // Generate the auth url + open
     auto url = auth_client.createAuthoriseURL(
     "http://127.0.0.1:8888/callback",
-    {"user-read-private", "user-read-email"});
+    {"user-read-private", "user-read-email", "user-read-currently-playing"});
+    Spotify::AuthServer::openBrowser(url);
 
-    // Display URL
-    std::cout << "Please visit the following url: " << url << std::endl;
-
-
-    // Allow the user to enter the code
-    std::cout << "Enter code from url: ";
-    std::string code;
-    std::getline(std::cin, code);
+    // Get the code and pass to the code;
+    std::string code = Spotify::AuthServer::waitForCode("127.0.0.1", 8888, "index.html");
 
     // Get the auth token from the code
     if(!code.empty()) {
-
-        if (auth_client.exchangeCode(code)) {
-            std::cout << "Authorization successful" << std::endl;
-        } else {
+        if (!auth_client.exchangeCode(code)) {
             std::cout << "Authorization failed with code: " << Spotify::Tools::stringifyResponse(auth_client.getError()) << std::endl;
             return 1;
         }
     }
 
-    std::cout << "Type anything to refresh token: ";
-    std::string input;
-    std::getline(std::cin, input);
 
-    if (input.empty())
-        return 1;
+    // --- Getting data ---
+    Spotify::Client client(auth_client);
 
-
-    if (auth_client.refreshAccessToken()) {
-        std::cout << "Re-Authorization successful" << std::endl;
-    } else {
-        std::cout << "Re-Authorization failed with code: " << Spotify::Tools::stringifyResponse(auth_client.getError()) << std::endl;
-        return 1;
-    }
-
-    return 0;
+    auto pb = client.player().getCurrentlyPlayingTrack();
 }

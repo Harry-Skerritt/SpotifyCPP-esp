@@ -9,9 +9,12 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # --- Library ---
 add_library(SpotifyAPILib STATIC
-        src/Auth.cpp
-        src/AuthServer.cpp
-        src/Tools.cpp
+        src/auth/Auth.cpp
+        src/auth/AuthServer.cpp
+        src/core/Client.cpp
+        src/util/Http.cpp
+        src/util/Tools.cpp
+        src/api/PlayerAPI.cpp
 )
 
 # Public includes: SpotifyAPILib
@@ -22,7 +25,7 @@ target_include_directories(SpotifyAPILib PRIVATE thirdparty)
 
 # --- Dependencies ---
 find_package(CURL REQUIRED)
-find_package(Threads REQUIRED) # For httplib
+find_package(Threads REQUIRED)
 
 target_link_libraries(SpotifyAPILib PRIVATE
         CURL::libcurl
@@ -54,8 +57,6 @@ add_executable(example_authServer examples/auth/authServerExample.cpp)
 target_link_libraries(example_authServer PRIVATE SpotifyAPILib)
 set_example_output_dir(example_authServer "auth")
 
-
-
 #Copy the HTML file to the same folder as the binaries
 configure_file(
         "${CMAKE_CURRENT_SOURCE_DIR}/examples/auth/index.html"
@@ -63,5 +64,9 @@ configure_file(
         COPYONLY
 )
 
-# --- X Examples ---
+
+# --- Player Data Examples ---
+add_executable(example_playerCurrent examples/player/currentTrackExample.cpp)
+target_link_libraries(example_playerCurrent PRIVATE SpotifyAPILib)
+set_example_output_dir(example_authServer "player")
 

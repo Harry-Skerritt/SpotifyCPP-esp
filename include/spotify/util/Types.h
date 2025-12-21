@@ -5,8 +5,11 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include <map>
+#include <string>
+#include <vector>
+#include <optional>
 #include <variant>
+#include <chrono>
 
 namespace Spotify {
 
@@ -33,21 +36,23 @@ namespace Spotify {
         ResponseCode response_code;
     };
 
-    inline std::map<int, std::string> RFC2616_Table =
-    {
-        {200, "OK"},
-        {201, "Created"},
-        {202, "Accepted"},
-        {204, "No Content"},
-        {304, "Not Modified"},
-        {400, "Bad Request"},
-        {401, "Unauthorized"},
-        {403, "Forbidden"},
-        {404, "Not Found"},
-        {429, "Too Many Requests"},
-        {500, "Internal Server Error"},
-        {502, "Bad Gateway"},
-        {503, "Service Unavailable"}
+    enum class RFC2616_Code {
+        OK = 200,
+        CREATED = 201,
+        ACCEPTED = 202,
+        NO_CONTENT = 204,
+        NOT_MODIFIED = 304,
+        BAD_REQUEST = 400,
+        UNAUTHORIZED = 401,
+        FORBIDDEN = 403,
+        NOT_FOUND = 404,
+        TOO_MANY_REQUESTS = 429,
+        INTERNAL_SERVER_ERROR = 500,
+        NOT_IMPLEMENTED = 501,
+        BAD_GATEWAY = 502,
+        SERVICE_UNAVAILABLE = 503,
+        NETWORK_ERROR = -1,
+        UNKNOWN_ERROR = -2,
     };
 
 
@@ -69,7 +74,7 @@ namespace Spotify {
         std::vector<T> items;
     };
 
-    // --- 'Base' Objects
+    // --- 'Base' Objects ---
     struct ImageObject {
         std::string url;
         std::optional<int> height;
@@ -425,7 +430,7 @@ namespace Spotify {
         std::vector<std::string> available_markets;
         std::vector<CopyrightObject> copyrights;
         std::string description;
-        std::string html_descriptions;
+        std::string html_description;
         std::string edition;
         bool is_explicit;
         ExternalURL external_urls;

@@ -2,7 +2,7 @@
 // Created by Harry Skerritt on 18/12/2025.
 //
 
-#include "spotify/Auth.hpp"
+#include "spotify/auth/Auth.hpp"
 
 
 // CURL Helper
