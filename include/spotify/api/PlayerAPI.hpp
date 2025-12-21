@@ -31,22 +31,16 @@ namespace Spotify {
         // POST
         void skipToNext(std::optional<std::string> device_id = std::nullopt) const;
         void skipToPrevious(std::optional<std::string> device_id = std::nullopt) const;
-        void addItemToQueue(std::string uri, std::optional<std::string> device_id = std::nullopt);
+        void addItemToQueue(const std::string& uri, const std::optional<std::string> &device_id = std::nullopt) const;
 
         // PUT
-        void transferPlayback(std::vector<std::string> device_ids, std::optional<bool> play = std::nullopt);
-        void startPlayback(std::optional<std::string> device_id = std::nullopt, std::optional<StartPlaybackProperties> properties = std::nullopt);
-        void pausePlayback(std::optional<std::string> device_id = std::nullopt);
-        void seekToPosition(int position_ms, std::optional<std::string> device_id = std::nullopt);
-        void setRepeatMode(RepeatState state, std::optional<std::string> device_id = std::nullopt);
-        void setPlaybackVolume(int volume_percent, std::optional<std::string> device_id = std::nullopt);
-        void togglePlaybackShuffle(bool state, std::optional<std::string> device_id = std::nullopt);
-
-
-
-
-
-
+        void transferPlayback(const std::vector<std::string>& device_ids, std::optional<bool> play = std::nullopt) const;
+        void startPlayback(const std::optional<std::string>& device_id = std::nullopt, const std::optional<StartPlaybackProperties>& properties = std::nullopt);
+        void pausePlayback(const std::optional<std::string> &device_id = std::nullopt) const;
+        void seekToPosition(int position_ms, const std::optional<std::string> &device_id = std::nullopt) const;
+        void setRepeatMode(RepeatState state, const std::optional<std::string> &device_id = std::nullopt) const;
+        void setPlaybackVolume(int volume_percent, std::optional<std::string> device_id = std::nullopt) const;
+        void togglePlaybackShuffle(bool state, std::optional<std::string> device_id = std::nullopt) const;
 
 
     private:

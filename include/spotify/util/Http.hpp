@@ -20,6 +20,7 @@ namespace HTTP {
 
     Result get(const std::string& url, const std::string& bearer);
     Result post(const std::string& url, const std::string& bearer, const std::string& body);
+    Result put (const std::string& url, const std::string& bearer, const std::string& body);
 
 }
 

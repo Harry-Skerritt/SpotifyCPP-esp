@@ -160,7 +160,7 @@ void Spotify::PlayerAPI::skipToPrevious(std::optional<std::string> device_id) co
     skipHelper(false, std::move(device_id));
 }
 
-void Spotify::PlayerAPI::addItemToQueue(std::string uri, std::optional<std::string> device_id) {
+void Spotify::PlayerAPI::addItemToQueue(const std::string& uri, const std::optional<std::string> &device_id) const {
     if (!m_client) return;
 
     std::string token = tryGetAccessToken();
@@ -174,12 +174,185 @@ void Spotify::PlayerAPI::addItemToQueue(std::string uri, std::optional<std::stri
     auto result = HTTP::post(url, token, "");
 
     if (result.code != RFC2616_Code::OK) {
-        std::cerr << "Failed to add to queue: " << (int)result.code << std::endl;
+        std::cerr << "Failed to add to queue: " << WebTools::getHttpStatusText((int)result.code) << std::endl;
     }
 }
 
-
 // --- PUT ---
+void Spotify::PlayerAPI::transferPlayback(const std::vector<std::string>& device_ids, std::optional<bool> play) const {
+    if (!m_client) return;
+
+    if (device_ids.size() != 1) {
+        std::cerr << "device_ids must have size of 1. Current size: " << device_ids.size() << std::endl;
+        return;
+    }
+
+    std::string token = tryGetAccessToken();
+
+    nlohmann::json j;
+    j["device_ids"] = device_ids;
+
+    if (play.has_value()) {
+        j["play"] = *play;
+    }
+
+    std::string body = j.dump();
+
+    auto result = HTTP::put(BASE_PLAYER_URL, token , body);
+
+    if (result.code != RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
+        std::cerr << "Transfer Playback failed: " << (int)result.code << " - " << result.body << std::endl;
+    }
+}
+
+void Spotify::PlayerAPI::startPlayback(const std::optional<std::string>& device_id, const std::optional<StartPlaybackProperties>& properties) {
+    if (!m_client) return;
+
+    std::string token = tryGetAccessToken();
+
+    std::string url = BASE_PLAYER_URL + "/play";
+
+    if (device_id.has_value() && !device_id->empty()) {
+        url += "?device_id=" + *device_id;
+    }
+
+    std::string body = "";
+    if (properties.has_value()) {
+        const auto& props = *properties;
+        nlohmann::json j = nlohmann::json::object();
+
+        if (props.context_uri) {
+            j["context_uri"] = *props.context_uri;
+        }
+
+        if (props.uris) {
+            j["uris"] = *props.uris;
+        }
+
+        if (props.offset) {
+            try {
+                j["offset"]["position"] = std::stoi(props.offset->position);
+            } catch (...) {
+                j["offset"]["position"] = props.offset->position;
+            }
+        }
+
+        j["position_ms"] = props.position_ms;
+
+        body = j.dump();
+    }
+
+
+    auto result = HTTP::put(url, token , body);
+
+    if (result.code != RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
+        std::cerr << "Start Playback failed: " << (int)result.code << " - " << result.body << std::endl;
+    }
+}
+
+void Spotify::PlayerAPI::pausePlayback(const std::optional<std::string> &device_id) const {
+    if (!m_client) return;
+
+    std::string token = tryGetAccessToken();
+
+    std::string url = BASE_PLAYER_URL + "/pause";
+
+    if (device_id.has_value() && !device_id->empty()) {
+        url += "?device_id=" + *device_id;
+    }
+
+    auto result = HTTP::put(url, token , "");
+
+    if (result.code != RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
+        std::cerr << "Failed to pause playback: " << WebTools::getHttpStatusText((int)result.code) << std::endl;
+    }
+}
+
+void Spotify::PlayerAPI::seekToPosition(int position_ms, const std::optional<std::string> &device_id) const {
+    if (!m_client) return;
+
+    std::string token = tryGetAccessToken();
+
+    std::string url = BASE_PLAYER_URL + "/seek?position_ms=" + WebTools::urlEncode(std::to_string(position_ms));
+
+    if (device_id.has_value() && !device_id->empty()) {
+        url += "?device_id=" + *device_id;
+    }
+
+    auto result = HTTP::put(url, token , "");
+
+    if (result.code != RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
+        std::cerr << "Failed to seek position: " << WebTools::getHttpStatusText((int)result.code) << std::endl;
+    }
+}
+
+void Spotify::PlayerAPI::setRepeatMode(RepeatState state, const std::optional<std::string> &device_id) const {
+    if (!m_client) return;
+
+    std::string repeat_state;
+    switch (state) {
+        case(Context):
+            repeat_state = "context";
+
+        case (Track):
+            repeat_state = "track";
+
+        case (Off):
+            repeat_state = "off";
+    }
+
+
+    std::string token = tryGetAccessToken();
+
+    std::string url = BASE_PLAYER_URL + "/repeat?state=" + WebTools::urlEncode(repeat_state);
+
+    if (device_id.has_value() && !device_id->empty()) {
+        url += "?device_id=" + *device_id;
+    }
+
+    auto result = HTTP::put(url, token , "");
+
+    if (result.code != RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
+        std::cerr << "Failed to set repeat state: " << WebTools::getHttpStatusText((int)result.code) << std::endl;
+    }
+}
+
+void Spotify::PlayerAPI::setPlaybackVolume(int volume_percent, std::optional<std::string> device_id) const {
+    if (!m_client) return;
+
+    std::string token = tryGetAccessToken();
+
+    std::string url = BASE_PLAYER_URL + "/volume?volume_percent=" + WebTools::urlEncode(std::to_string(volume_percent));
+
+    if (device_id.has_value() && !device_id->empty()) {
+        url += "?device_id=" + *device_id;
+    }
+
+    auto result = HTTP::put(url, token , "");
+
+    if (result.code != RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
+        std::cerr << "Failed to set volume: " << WebTools::getHttpStatusText((int)result.code) << std::endl;
+    }
+}
+
+void Spotify::PlayerAPI::togglePlaybackShuffle(bool state, std::optional<std::string> device_id) const {
+    if (!m_client) return;
+
+    std::string token = tryGetAccessToken();
+
+    std::string url = BASE_PLAYER_URL + "/shuffle?state=" + (state ? "true" : "false");;
+
+    if (device_id.has_value() && !device_id->empty()) {
+        url += "?device_id=" + *device_id;
+    }
+
+    auto result = HTTP::put(url, token , "");
+
+    if (result.code != RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
+        std::cerr << "Failed to set shuffle state: " << WebTools::getHttpStatusText((int)result.code) << std::endl;
+    }
+}
+
 
 // --- PRIVATE ---
 std::string Spotify::PlayerAPI::tryGetAccessToken() const {

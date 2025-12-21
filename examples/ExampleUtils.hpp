@@ -32,7 +32,8 @@ namespace Spotify {
                 "user-read-private", 
                 "user-read-playback-state", 
                 "user-read-currently-playing",
-                "user-read-recently-played"
+                "user-read-recently-played",
+                "user-modify-playback-state"
             });
 
             AuthServer::openBrowser(url);
