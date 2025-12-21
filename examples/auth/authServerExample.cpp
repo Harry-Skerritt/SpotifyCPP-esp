@@ -26,7 +26,7 @@ int main() {
     // Generate the auth url
     auto url = auth_client.createAuthoriseURL(
     "http://127.0.0.1:8888/callback",
-    {"user-read-private", "user-read-email"});
+    {Spotify::Scope::UserReadPrivate, Spotify::Scope::UserReadEmail});
 
     // Open the url in the browser
     Spotify::AuthServer::openBrowser(url);

@@ -6,7 +6,6 @@
 #include <spotify/spotify.hpp>
 
 int main() {
-
     // Getting client values from .env
     std::string env_path = "/Volumes/Data/Code/C++/2025/SpotifyAPILib/.env";
     Spotify::Tools::loadEnv(env_path);
@@ -26,7 +25,7 @@ int main() {
     // Generate the auth url
     auto url = auth_client.createAuthoriseURL(
     "http://127.0.0.1:8888/callback",
-    {"user-read-private", "user-read-email"});
+    {Spotify::Scope::UserReadPrivate, Spotify::Scope::UserReadEmail});
 
     // Display URL
     std::cout << "Please visit the following url: " << url << std::endl;

@@ -26,13 +26,14 @@ namespace Spotify {
             Auth auth({key, secret});
             
             // 3. Handshake
-            auto url = auth.createAuthoriseURL("http://127.0.0.1:8888/callback", {
-                "user-read-private", 
-                "user-read-playback-state", 
-                "user-read-currently-playing",
-                "user-read-recently-played",
-                "user-modify-playback-state"
-            });
+            auto url = auth.createAuthoriseURL("http://127.0.0.1:8888/callback",
+                {
+                    Spotify::Scope::UserReadPrivate,
+                    Scope::UserReadPlaybackState,
+                    Scope::UserReadCurrentlyPlaying,
+                    Scope::UserReadRecentlyPlayed,
+                    Scope::UserModifyPlaybackState
+                });
 
             AuthServer::openBrowser(url);
             std::string code = AuthServer::waitForCode("127.0.0.1", 8888, "index.html");

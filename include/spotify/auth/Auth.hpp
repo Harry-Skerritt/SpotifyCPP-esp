@@ -17,6 +17,7 @@
 #include "spotify/util/Tools.hpp"
 #include "spotify/util/Types.h"
 #include "spotify/util/base64.hpp"
+#include "spotify/util/Scopes.hpp"
 
 
 namespace Spotify {
@@ -30,7 +31,7 @@ namespace Spotify {
         // OAuth2 Flow
         std::string createAuthoriseURL(
             const std::string &redirectUri,
-            const std::vector<std::string> &scopes,
+            const std::vector<Scope> &scopes,
             const std::optional<std::string>& state = std::nullopt);
 
         bool exchangeCode(const std::string &code);

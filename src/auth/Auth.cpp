@@ -4,6 +4,7 @@
 
 #include "spotify/auth/Auth.hpp"
 
+
 namespace Spotify {
     // CURL Helper
     static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -17,18 +18,14 @@ namespace Spotify {
         m_credentials = keys;
     }
 
-    std::string Spotify::Auth::createAuthoriseURL(
+    std::string Auth::createAuthoriseURL(
         const std::string& redirect_uri,
-        const std::vector<std::string>& scopes,
+        const std::vector<Scope>& scopes,
         const std::optional<std::string>& state)
     {
 
         // Make scopes one string
-        std::ostringstream scope_stream;
-        for (size_t i = 0; i < scopes.size(); ++i) {
-            if (i > 0) scope_stream << " ";
-            scope_stream << scopes[i];
-        }
+        std::string scope_str = buildScopeString(scopes);
 
         auto actual_state = state.value_or(WebTools::generateRandomState());
 
@@ -37,7 +34,7 @@ namespace Spotify {
         std::ostringstream oss;
         oss << "response_type=code"
         << "&client_id=" << WebTools::urlEncode(m_credentials.client_id)
-        << "&scope=" << WebTools::urlEncode(scope_stream.str())
+        << "&scope=" << WebTools::urlEncode(scope_str)
         << "&redirect_uri=" << WebTools::urlEncode(redirect_uri)
         << "&state=" << WebTools::urlEncode(actual_state);
 
@@ -46,7 +43,7 @@ namespace Spotify {
         return auth_url;
     }
 
-    bool Spotify::Auth::exchangeCode(const std::string &code) {
+    bool Auth::exchangeCode(const std::string &code) {
         CURL *curl;
         CURLcode result;
         curl_slist *headers = NULL;
