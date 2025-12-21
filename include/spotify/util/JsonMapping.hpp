@@ -23,6 +23,7 @@ namespace Spotify {
 
     // --- Base Objects ---
     void from_json(const json& j, ImageObject& i);
+    void from_json(const json& j, CursorObject& c);
     void from_json(const json& j, CopyrightObject& c);
     void from_json(const json& j, ExternalURL& e);
     void from_json(const json& j, RestrictionsObject& r);
@@ -65,11 +66,16 @@ namespace Spotify {
     void from_json(const json& j, EpisodeObject& e);
     void from_json(const json& j, ShowObject& s);
     void from_json(const json& j, PlaybackObject& p);
-    void from_json(const json&j , PlaylistObject& p);
+    void from_json(const json& j, PlaylistObject& p);
     void from_json(const json& j, UserObject& u);
+    void from_json(const json& j, PlayHistoryObject& p);
+    void from_json(const json& j, QueueObject& q);
 
     // --- Search ---
     void from_json(const json& j, SearchObject& s);
+
+    // --- List Objects ---
+    void from_json(const json& j, DeviceListObject& dl);
 
 }
 

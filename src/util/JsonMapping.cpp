@@ -21,12 +21,31 @@ namespace Spotify {
         }
     }
 
+    void map_queue_item(const nlohmann::json& j, std::variant<std::shared_ptr<TrackObject>, std::shared_ptr<EpisodeObject>>& target) {
+        std::string type = j.value("type", "track");
+        if (type == "track") {
+            auto t = std::make_shared<TrackObject>();
+            j.get_to(*t);
+            target = t;
+        } else if (type == "episode") {
+            auto e = std::make_shared<EpisodeObject>();
+            j.get_to(*e);
+            target = e;
+        }
+    }
+
     // --- Base Objects ---
     void from_json(const json &j, ImageObject &i) {
         i.url = j.value("url", "");
         map_optional(j, "width", i.width);
         map_optional(j, "height", i.height);
     }
+
+    void from_json(const json &j, CursorObject &c) {
+        c.after = j.value("after", "");
+        c.before = j.value("before", "");
+    }
+
 
     void from_json(const json &j, CopyrightObject &c) {
         c.text = j.value("text", "");
@@ -328,11 +347,13 @@ namespace Spotify {
     void from_json(const nlohmann::json& j, PagingObject<T>& p) {
         p.href = j.value("href", "");
         p.limit = j.value("limit", 0);
-        p.offset = j.value("offset", 0);
         p.total = j.value("total", 0);
 
+        map_optional(j, "offset", p.offset);
         map_optional(j, "next", p.next);
         map_optional(j, "prev", p.prev);
+
+        map_optional(j, "cursors", p.cursors);
 
         p.items = j.value("items", std::vector<T>{});
     }
@@ -545,6 +566,29 @@ namespace Spotify {
         u.uri = j.value("uri", "");
     }
 
+    void from_json(const json &j, PlayHistoryObject &p) {
+        map_object(j, "track", p.track);
+        p.played_at = j.value("played_at", "");
+        map_object(j, "context", p.context);
+    }
+
+    void from_json(const json &j, QueueObject &q) {
+        if (j.contains("currently_playing") && !j["currently_playing"].is_null()) {
+            map_queue_item(j.at("currently_playing"), q.currently_playing);
+        }
+
+
+        if (j.contains("queue") && j["queue"].is_array()) {
+            for (const auto& item : j.at("queue")) {
+                std::variant<std::shared_ptr<TrackObject>, std::shared_ptr<EpisodeObject>> v;
+                map_queue_item(item, v);
+                q.queue.push_back(v);
+            }
+        }
+    }
+
+
+
     // --- Search ---
     void from_json(const json &j, SearchObject &s) {
         map_optional(j, "tracks", s.tracks);
@@ -555,4 +599,16 @@ namespace Spotify {
         map_optional(j, "episodes", s.episodes);
         map_optional(j, "audiobooks", s.audiobook);
     }
+
+    // --- List Objects ---
+    void from_json(const json &j, DeviceListObject &dl) {
+        dl.devices = j.value("devices", std::vector<DeviceObject>{});
+    }
+
 }
+
+template void Spotify::from_json<Spotify::PlayHistoryObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::PlayHistoryObject>& p);
+template void Spotify::from_json<Spotify::TrackObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::TrackObject>& p);
+template void Spotify::from_json<Spotify::ArtistObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::ArtistObject>& p);
+template void Spotify::from_json<Spotify::SimplifiedAlbumObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::SimplifiedAlbumObject>& p);
+template void Spotify::from_json<Spotify::PlaylistTrackObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::PlaylistTrackObject>& p);

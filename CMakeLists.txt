@@ -70,5 +70,9 @@ configure_file(
 # --- Player Data Examples ---
 add_executable(example_playerCurrent examples/player/currentTrackExample.cpp)
 target_link_libraries(example_playerCurrent PRIVATE SpotifyAPILib)
-set_example_output_dir(example_authServer "player")
+set_example_output_dir(example_playerCurrent "player")
+
+add_executable(example_playback examples/player/playbackExample.cpp)
+target_link_libraries(example_playback PRIVATE SpotifyAPILib)
+set_example_output_dir(example_playback "player")
 

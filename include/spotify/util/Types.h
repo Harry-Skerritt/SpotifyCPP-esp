@@ -57,28 +57,21 @@ namespace Spotify {
 
 
     // Todo: Investigate Categories
-    // Todo: See if any other forward declarations can be made for readability
     struct EpisodeObject;
     struct TrackObject;
     struct ArtistObject;
     struct AlbumObject;
-
-    template <typename T>
-    struct PagingObject {
-        std::string href;
-        int limit{};
-        std::optional<std::string> next;
-        int offset{};
-        std::optional<std::string> prev;
-        int total{};
-        std::vector<T> items;
-    };
 
     // --- 'Base' Objects ---
     struct ImageObject {
         std::string url;
         std::optional<int> height;
         std::optional<int> width;
+    };
+
+    struct CursorObject {
+        std::string after;
+        std::string before;
     };
 
     struct CopyrightObject {
@@ -199,6 +192,20 @@ namespace Spotify {
         int total;
     };
 
+
+    // Templates
+    template <typename T>
+    struct PagingObject {
+        std::string href;
+        int limit{};
+        std::optional<std::string> next;
+        std::optional<int> offset;
+        std::optional<std::string> prev;
+        int total{};
+        std::vector<T> items;
+
+        std::optional<CursorObject> cursors;
+    };
 
     // --- Simplified Objects ---
     struct SimplifiedArtistObject {
@@ -364,7 +371,6 @@ namespace Spotify {
     using LinkedChaptersObject = PagingObject<SimplifiedChapterObject>;
     using LinkedEpisodesObject = PagingObject<SimplifiedEpisodeObject>;
     using LinkedPlaylistTracksObject = PagingObject<PlaylistTrackObject>;
-
 
     // --- 'Main' Response Objects --
     struct AlbumObject {
@@ -562,6 +568,18 @@ namespace Spotify {
         std::string uri;
     };
 
+    struct PlayHistoryObject {
+        TrackObject track;
+        std::string played_at;
+        ContextObject context;
+    };
+
+    using RecentlyPlayedTracksObject = PagingObject<PlayHistoryObject>;
+
+    struct QueueObject {
+        std::variant<std::shared_ptr<TrackObject>, std::shared_ptr<EpisodeObject>> currently_playing;
+        std::vector<std::variant<std::shared_ptr<TrackObject>, std::shared_ptr<EpisodeObject>>> queue;
+    };
 
     // --- Search --
     using SearchTrackObject = PagingObject<TrackObject>;
@@ -580,6 +598,32 @@ namespace Spotify {
         std::optional<SearchShowsObject> shows;
         std::optional<SearchEpisodesObject> episodes;
         std::optional<SearchAudioBookObject> audiobook;
+    };
+
+    // --- List Objects ---
+    struct DeviceListObject {
+        std::vector<DeviceObject> devices;
+    };
+
+
+
+    // ---- CUSTOM TYPES ----
+    struct OffsetObject {
+        std::string position;
+    };
+
+    struct StartPlaybackProperties {
+        std::optional<std::string> context_uri;
+        std::optional<std::vector<std::string>> uris;
+        std::optional<OffsetObject> offset;
+        int position_ms;
+
+    };
+
+    enum RepeatState {
+        Track,
+        Context,
+        Off
     };
 
 }
