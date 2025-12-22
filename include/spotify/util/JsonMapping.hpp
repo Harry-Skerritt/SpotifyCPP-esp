@@ -77,6 +77,7 @@ namespace Spotify {
     // --- List Objects ---
     void from_json(const json& j, DeviceListObject& dl);
     void from_json(const json& j, AlbumListObject& al);
+    void from_json(const json& j, SavedAlbumObject& s);
 
 }
 

@@ -626,6 +626,14 @@ namespace Spotify {
         std::vector<AlbumObject> albums;
     };
 
+    struct SavedAlbumObject {
+        std::string added_at;
+        AlbumObject album;
+    };
+
+    using PagedSavedAlbumObject = PagingObject<SavedAlbumObject>;
+
+
 
 
     // ---- CUSTOM TYPES ----

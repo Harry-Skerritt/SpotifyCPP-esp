@@ -32,7 +32,8 @@ namespace Spotify {
                     Scope::UserReadPlaybackState,
                     Scope::UserReadCurrentlyPlaying,
                     Scope::UserReadRecentlyPlayed,
-                    Scope::UserModifyPlaybackState
+                    Scope::UserModifyPlaybackState,
+                    Scope::UserLibraryRead
                 });
 
             AuthServer::openBrowser(url);

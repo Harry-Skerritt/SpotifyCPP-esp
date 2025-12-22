@@ -34,5 +34,5 @@ int main () {
 
     std::cout << "There are " << queue->queue.size() << " item(s) in queue" << std::endl;
 
-
+    return 0;
 }

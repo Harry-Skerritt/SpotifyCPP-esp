@@ -125,7 +125,7 @@ namespace Spotify {
 
         auto result = HTTP::get(url, token);
 
-        if (result.code == RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
+        if (result.code == RFC2616_Code::NO_CONTENT || result.code != RFC2616_Code::OK) {
             std::cerr << WebTools::getHttpStatusText((int)result.code)<< std::endl;
             return std::nullopt;
         }
@@ -146,7 +146,7 @@ namespace Spotify {
         }
     }
 
-    std::optional<PagedAlbumObject> AlbumAPI::getUsersSavedAlbums(std::optional<int> limit, std::optional<int> offset, std::optional<std::string> market) const {
+    std::optional<PagedSavedAlbumObject> AlbumAPI::getUsersSavedAlbums(std::optional<int> limit, std::optional<int> offset, std::optional<std::string> market) const {
         if (!m_client) return std::nullopt;
 
         std::string token = tryGetAccessToken();
@@ -177,7 +177,7 @@ namespace Spotify {
 
         auto result = HTTP::get(url, token);
 
-        if (result.code == RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
+        if (result.code == RFC2616_Code::NO_CONTENT || result.code != RFC2616_Code::OK) {
             std::cerr << WebTools::getHttpStatusText((int)result.code)<< std::endl;
             return std::nullopt;
         }
@@ -190,7 +190,7 @@ namespace Spotify {
 
         try {
             auto data = nlohmann::json::parse(result.body);
-            return data.get<PagedAlbumObject>();
+            return data.get<PagedSavedAlbumObject>();
 
         } catch (const nlohmann::json::exception& e) {
             std::cerr << "JSON Mapping failed: " << e.what() << std::endl;
@@ -235,12 +235,12 @@ namespace Spotify {
         }
     }
 
-    std::optional<PagedAlbumObject> AlbumAPI::getNewReleases(std::optional<int> limit, std::optional<int> offset) {
+    std::optional<PagedAlbumObject> AlbumAPI::getNewReleases(std::optional<int> limit, std::optional<int> offset) const {
         if (!m_client) return std::nullopt;
 
         std::string token = tryGetAccessToken();
 
-        std::string url = BASE_BROWSE_URL;
+        std::string url = BASE_BROWSE_URL + "/new-releases";
 
         std::vector<std::string> params;
 
@@ -275,7 +275,10 @@ namespace Spotify {
 
         try {
             auto data = nlohmann::json::parse(result.body);
-            return data.get<PagedAlbumObject>();
+            if (data.contains("albums"))
+                return data.at("albums").get<PagedAlbumObject>();
+            else
+                return std::nullopt;
 
         } catch (const nlohmann::json::exception& e) {
             std::cerr << "JSON Mapping failed: " << e.what() << std::endl;
