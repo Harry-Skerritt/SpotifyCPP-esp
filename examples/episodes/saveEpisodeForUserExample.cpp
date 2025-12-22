@@ -20,12 +20,17 @@ int main () {
     std::cout << "Saved Episode! - Checking..." << std::endl;
 
     // This tests the check endpoint
-
     auto check = client.episode().checkUsersSavedEpisodes(episode_ids);
 
+    int i = 1;
     if (check.has_value()) {
         for (auto c : check.value()) {
-            std::cout << c << std::endl;
+            if (c) {
+                std::cout << "Episode " << i << " present!";
+            } else {
+                std::cout << "Episode " << i << " not present!";
+            }
+            i++;
         }
     }
 

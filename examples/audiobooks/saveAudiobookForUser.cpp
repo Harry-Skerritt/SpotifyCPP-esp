@@ -17,7 +17,22 @@ int main () {
 
     client.audiobook().saveAudiobookForUser(audiobook_ids);
 
-    std::cout << "Saved Audiobook!" << std::endl;
+    std::cout << "Saved Audiobook! - Checking" << std::endl;
+
+    // This tests the check endpoint
+    auto check = client.audiobook().checkUsersSavedAudiobooks(audiobook_ids);
+
+    int i = 1;
+    if (check.has_value()) {
+        for (auto c : check.value()) {
+            if (c) {
+                std::cout << "Audiobook " << i << " present!";
+            } else {
+                std::cout << "Audiobook " << i << " not present!";
+            }
+            i++;
+        }
+    }
 
     return 0;
 }

@@ -17,7 +17,22 @@ int main () {
 
     client.album().saveAlbumsForUser(album_ids);
 
-    std::cout << "Saved Album!" << std::endl;
+    std::cout << "Saved Album! - Checking..." << std::endl;
+
+    // This tests the check endpoint
+    auto check = client.album().checkUsersSavedAlbums(album_ids);
+
+    int i = 1;
+    if (check.has_value()) {
+        for (auto c : check.value()) {
+            if (c) {
+                std::cout << "Album " << i << " present!";
+            } else {
+                std::cout << "Album " << i << " not present!";
+            }
+            i++;
+        }
+    }
 
     return 0;
 }
