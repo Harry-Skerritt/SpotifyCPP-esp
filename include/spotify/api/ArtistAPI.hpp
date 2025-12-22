@@ -29,7 +29,7 @@ namespace Spotify {
             std::optional<std::vector<IncludeGroups>> include_groups = std::nullopt,
             std::optional<std::string> market = std::nullopt,
             std::optional<int> limit = std::nullopt, std::optional<int> offset = std::nullopt) const;
-        [[nodiscard]] std::optional<TrackListObject> getArtistTopTracks(const std::string &id, std::optional<std::string> market) const;
+        [[nodiscard]] std::optional<TrackListObject> getArtistTopTracks(const std::string &id, std::optional<std::string> market = std::nullopt) const;
 
     private:
         [[nodiscard]] std::string tryGetAccessToken() const;

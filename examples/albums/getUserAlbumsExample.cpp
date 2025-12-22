@@ -11,7 +11,6 @@ int main () {
     auto auth = Spotify::ExampleUtils::authenticateFromEnv();
     Spotify::Client client(auth);
 
-    // Single Album
     auto user_albums = client.album().getUsersSavedAlbums(5);
 
     if (user_albums.has_value()) {

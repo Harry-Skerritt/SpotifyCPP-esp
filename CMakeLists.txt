@@ -79,7 +79,7 @@ target_link_libraries(example_playback PRIVATE SpotifyAPILib)
 set_example_output_dir(example_playback "player")
 
 
-# --- Album Examples
+# --- Album Examples ---
 add_executable(example_newReleases examples/albums/newReleaseExample.cpp)
 target_link_libraries(example_newReleases PRIVATE SpotifyAPILib)
 set_example_output_dir(example_newReleases "albums")
@@ -95,3 +95,16 @@ set_example_output_dir(example_getAlbumTracks "albums")
 add_executable(example_getUserAlbums examples/albums/getUserAlbumsExample.cpp)
 target_link_libraries(example_getUserAlbums PRIVATE SpotifyAPILib)
 set_example_output_dir(example_getUserAlbums "albums")
+
+# --- Artist Examples ---
+add_executable(example_getArtists examples/artists/getArtistExample.cpp)
+target_link_libraries(example_getArtists PRIVATE SpotifyAPILib)
+set_example_output_dir(example_getArtists "artists")
+
+add_executable(example_getArtistsAlbums examples/artists/getArtistsAlbumsExample.cpp)
+target_link_libraries(example_getArtistsAlbums PRIVATE SpotifyAPILib)
+set_example_output_dir(example_getArtistsAlbums "artists")
+
+add_executable(example_getArtistTopTracks examples/artists/getArtistTopTracksExample.cpp)
+target_link_libraries(example_getArtistTopTracks PRIVATE SpotifyAPILib)
+set_example_output_dir(example_getArtistTopTracks "artists")
