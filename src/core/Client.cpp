@@ -6,6 +6,7 @@
 #include "spotify/api/AlbumAPI.hpp"
 #include "spotify/api/ArtistAPI.hpp"
 #include "spotify/api/AudiobookAPI.hpp"
+#include "spotify/api/CategoryAPI.hpp"
 #include "spotify/api/PlayerAPI.hpp"
 
 
@@ -27,6 +28,10 @@ namespace Spotify {
 
     AudiobookAPI Client::audiobook() {
         return AudiobookAPI(this);
+    }
+
+    CategoryAPI Client::category() {
+        return CategoryAPI(this);
     }
 
     PlayerAPI Client::player() {

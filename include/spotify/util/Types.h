@@ -373,6 +373,7 @@ namespace Spotify {
     using PagedPlaylistTrackObject = PagingObject<PlaylistTrackObject>;
     using PagedAlbumObject = PagingObject<SimplifiedAlbumObject>;
     using PagedAudiobookObject = PagingObject<SimplifiedAudiobookObject>;
+    using PagedCategoryObject = PagingObject<CategoryObject>;
 
     // --- 'Main' Response Objects --
     struct AlbumObject {

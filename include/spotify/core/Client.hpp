@@ -15,6 +15,7 @@ namespace Spotify {
     class AlbumAPI;
     class ArtistAPI;
     class AudiobookAPI;
+    class CategoryAPI;
     class PlayerAPI;
 
     class Client {
@@ -28,6 +29,7 @@ namespace Spotify {
         AlbumAPI album();
         ArtistAPI artist();
         AudiobookAPI audiobook();
+        CategoryAPI category();
         PlayerAPI player();
 
 

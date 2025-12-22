@@ -19,6 +19,7 @@ add_library(SpotifyAPILib STATIC
         src/api/AlbumAPI.cpp
         src/api/ArtistAPI.cpp
         src/api/AudiobookAPI.cpp
+        src/api/CategoryAPI.cpp
         src/api/PlayerAPI.cpp
 
 )
@@ -96,6 +97,7 @@ add_executable(example_newReleases examples/albums/newReleaseExample.cpp)
 target_link_libraries(example_newReleases PRIVATE SpotifyAPILib)
 set_example_output_dir(example_newReleases "albums")
 
+
 # --- Artist Examples ---
 add_executable(example_getArtists examples/artists/getArtistExample.cpp)
 target_link_libraries(example_getArtists PRIVATE SpotifyAPILib)
@@ -108,7 +110,6 @@ set_example_output_dir(example_getArtistsAlbums "artists")
 add_executable(example_getArtistTopTracks examples/artists/getArtistTopTracksExample.cpp)
 target_link_libraries(example_getArtistTopTracks PRIVATE SpotifyAPILib)
 set_example_output_dir(example_getArtistTopTracks "artists")
-
 
 
 # --- Audiobook Examples ---
@@ -132,6 +133,15 @@ add_executable(example_deleteUserAudiobook examples/audiobooks/removeAudiobookFo
 target_link_libraries(example_deleteUserAudiobook PRIVATE SpotifyAPILib)
 set_example_output_dir(example_deleteUserAudiobook "audiobooks")
 
+
+# --- Category Examples ---
+add_executable(example_getSingleCategory examples/categories/getSingleCategoryExample.cpp)
+target_link_libraries(example_getSingleCategory PRIVATE SpotifyAPILib)
+set_example_output_dir(example_getSingleCategory "categories")
+
+add_executable(example_getMultiCategory examples/categories/getMultipleCategoriesExample.cpp)
+target_link_libraries(example_getMultiCategory PRIVATE SpotifyAPILib)
+set_example_output_dir(example_getMultiCategory "categories")
 
 
 # --- ... ---

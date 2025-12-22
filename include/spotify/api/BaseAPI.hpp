@@ -5,8 +5,6 @@
 #ifndef BASEAPI_HPP
 #define BASEAPI_HPP
 
-#endif //BASEAPI_HPP
-
 #pragma once
 #include <optional>
 #include <string>
@@ -78,3 +76,4 @@ namespace Spotify {
 
     };
 }
+#endif //BASEAPI_HPP
