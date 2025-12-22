@@ -3,6 +3,9 @@
 //
 
 #include "spotify/core/Client.hpp"
+#include "spotify/api/AlbumAPI.hpp"
+#include "spotify/api/ArtistAPI.hpp"
+#include "spotify/api/PlayerAPI.hpp"
 
 namespace Spotify {
     Client::Client(Auth& auth) : m_auth(auth) { }

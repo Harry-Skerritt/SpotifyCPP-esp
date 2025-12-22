@@ -48,7 +48,7 @@ namespace Spotify {
     void from_json(const json& j, SimplifiedArtistObject& a);
     void from_json(const json& j, SimplifiedTrackObject& t);
     void from_json(const json& j, SimplifiedChapterObject& c);
-    void from_json(const json& j, SimplifiedAudioBookObject& a);
+    void from_json(const json& j, SimplifiedAudiobookObject& a);
     void from_json(const json& j, SimplifiedEpisodeObject& e);
     void from_json(const json& j, SimplifiedShowObject& s);
     void from_json(const json& j, SimplifiedPlaylistObject& p);
@@ -61,7 +61,7 @@ namespace Spotify {
     void from_json(const json& j, AlbumObject& a);
     void from_json(const json& j, ArtistObject& a);
     void from_json(const json& j, TrackObject& a);
-    void from_json(const json& j, AudioBookObject& a);
+    void from_json(const json& j, AudiobookObject& a);
     void from_json(const json& j, ChapterObject& c);
     void from_json(const json& j, EpisodeObject& e);
     void from_json(const json& j, ShowObject& s);
@@ -78,9 +78,21 @@ namespace Spotify {
     void from_json(const json& j, DeviceListObject& dl);
     void from_json(const json& j, AlbumListObject& al);
     void from_json(const json& j, ArtistListObject& al);
+    void from_json(const json& j, AudiobookListObject& ab);
     void from_json(const json& j, TrackListObject& tl);
 
     void from_json(const json& j, SavedAlbumObject& s);
+
+
+    // --- Explicit Paging Instantiations ---
+    extern template void from_json<TrackObject>(const json&, PagingObject<TrackObject>&);
+    extern template void from_json<SimplifiedChapterObject>(const json& j, PagingObject<SimplifiedChapterObject>& p);
+    extern template void from_json<ArtistObject>(const json&, PagingObject<ArtistObject>&);
+    extern template void from_json<SimplifiedAlbumObject>(const json&, PagingObject<SimplifiedAlbumObject>&);
+    extern template void from_json<SimplifiedTrackObject>(const json&, PagingObject<SimplifiedTrackObject>&);
+    extern template void from_json<PlaylistTrackObject>(const json&, PagingObject<PlaylistTrackObject>&);
+    extern template void from_json<SavedAlbumObject>(const json&, PagingObject<SavedAlbumObject>&);
+    extern template void from_json<PlayHistoryObject>(const json&, PagingObject<PlayHistoryObject>&);
 
 
 }

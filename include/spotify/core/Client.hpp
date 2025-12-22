@@ -8,13 +8,18 @@
 #pragma once
 #include <string>
 #include "spotify/auth/Auth.hpp"
-#include "spotify/api/PlayerAPI.hpp"
-#include "spotify/api/AlbumAPI.hpp"
-#include "spotify/api/ArtistAPI.hpp"
+//#include "spotify/api/PlayerAPI.hpp"
+//#include "spotify/api/AlbumAPI.hpp"
+//#include "spotify/api/ArtistAPI.hpp"
 
 
 
 namespace Spotify {
+
+    class AlbumAPI;
+    class ArtistAPI;
+    class PlayerAPI;
+
     class Client {
     // Funcs
     public:
@@ -26,7 +31,7 @@ namespace Spotify {
         AlbumAPI album();
         ArtistAPI artist();
         PlayerAPI player();
-        
+
 
 
 

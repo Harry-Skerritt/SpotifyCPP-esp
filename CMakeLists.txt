@@ -15,8 +15,10 @@ add_library(SpotifyAPILib STATIC
         src/util/Http.cpp
         src/util/Tools.cpp
         src/util/JsonMapping.cpp
+        src/api/BaseAPI.cpp
         src/api/AlbumAPI.cpp
         src/api/ArtistAPI.cpp
+        src/api/AudiobookAPI.cpp
         src/api/PlayerAPI.cpp
 
 )
@@ -25,7 +27,7 @@ add_library(SpotifyAPILib STATIC
 target_include_directories(SpotifyAPILib PUBLIC include)
 
 # Private include: Thirdparty
-target_include_directories(SpotifyAPILib PRIVATE thirdparty)
+target_include_directories(SpotifyAPILib PUBLIC thirdparty)
 
 # --- Dependencies ---
 find_package(CURL REQUIRED)
@@ -95,6 +97,15 @@ set_example_output_dir(example_getAlbumTracks "albums")
 add_executable(example_getUserAlbums examples/albums/getUserAlbumsExample.cpp)
 target_link_libraries(example_getUserAlbums PRIVATE SpotifyAPILib)
 set_example_output_dir(example_getUserAlbums "albums")
+
+add_executable(example_saveUserAlbums examples/albums/saveAlbumForUserExample.cpp)
+target_link_libraries(example_saveUserAlbums PRIVATE SpotifyAPILib)
+set_example_output_dir(example_saveUserAlbums "albums")
+
+add_executable(example_deleteUserAlbums examples/albums/removeAlbumForUserExample.cpp)
+target_link_libraries(example_deleteUserAlbums PRIVATE SpotifyAPILib)
+set_example_output_dir(example_deleteUserAlbums "albums")
+
 
 # --- Artist Examples ---
 add_executable(example_getArtists examples/artists/getArtistExample.cpp)

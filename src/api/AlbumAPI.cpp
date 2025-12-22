@@ -12,48 +12,17 @@
 #include "spotify/util/Tools.hpp"
 
 namespace Spotify {
-    AlbumAPI::AlbumAPI(Client *client) : m_client(client) { }
-
 
     // --- GET ---
     std::optional<AlbumObject> AlbumAPI::getAlbum(const std::string &id, std::optional<std::string> market) const {
-        if (!m_client) return std::nullopt;
-
-        std::string token = tryGetAccessToken();
-
         std::string url = BASE_ALBUM_URL + "/" + WebTools::urlEncode(id);
-
         if (market.has_value() && !market->empty() && Tools::isValidMarket(*market)) {
-                url += "?market=" + WebTools::urlEncode(*market);
+            url += "?market=" + WebTools::urlEncode(*market);
         }
-
-        auto result = HTTP::get(url, token);
-
-        if (result.code == RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
-            std::cerr << WebTools::getHttpStatusText((int)result.code)<< std::endl;
-            return std::nullopt;
-        }
-
-        // Successfully received a body
-        if (result.body.empty()) {
-            std::cerr << "CRITICAL: No body received from request!" << std::endl;
-            return std::nullopt;
-        }
-
-        try {
-            auto data = nlohmann::json::parse(result.body);
-            return data.get<AlbumObject>();
-
-        } catch (const nlohmann::json::exception& e) {
-            std::cerr << "JSON Mapping failed: " << e.what() << std::endl;
-            return std::nullopt;
-        }
+        return fetchAndParse<AlbumObject>(url);
     }
 
     std::optional<AlbumListObject> AlbumAPI::getMultipleAlbums(const std::vector<std::string>& ids, std::optional<std::string> market) const {
-        if (!m_client) return std::nullopt;
-
-        std::string token = tryGetAccessToken();
 
         std::string id_list = Tools::toCSV(ids, 0, 20);
         if (id_list == "size-error") {
@@ -63,41 +32,14 @@ namespace Spotify {
 
         std::string url = BASE_ALBUM_URL + "?ids=" + id_list;
 
-        if (market.has_value() && !market->empty()) {
-            if (Tools::isValidMarket(*market)) {
-                url += "&market=" + WebTools::urlEncode(*market);
-            }
+        if (market.has_value() && !market->empty() && Tools::isValidMarket(*market)) {
+            url += "?market=" + WebTools::urlEncode(*market);
         }
 
-        auto result = HTTP::get(url, token);
-
-        if (result.code == RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
-            std::cerr << WebTools::getHttpStatusText((int)result.code)<< std::endl;
-            return std::nullopt;
-        }
-
-        // Successfully received a body
-        if (result.body.empty()) {
-            std::cerr << "CRITICAL: No body received from request!" << std::endl;
-            return std::nullopt;
-        }
-
-
-        try {
-            auto data = nlohmann::json::parse(result.body);
-            return data.get<AlbumListObject>();
-
-        } catch (const nlohmann::json::exception& e) {
-            std::cerr << "JSON Mapping failed: " << e.what() << std::endl;
-            return std::nullopt;
-        }
-
+        return fetchAndParse<AlbumListObject>(url);
     }
 
     std::optional<PagedTrackObject> AlbumAPI::getAlbumTracks(const std::string &id, std::optional<std::string> market, std::optional<int> limit, std::optional<int> offset) const {
-        if (!m_client) return std::nullopt;
-
-        std::string token = tryGetAccessToken();
 
         std::string url = BASE_ALBUM_URL + "/" + WebTools::urlEncode(id) + "/tracks";
 
@@ -123,33 +65,10 @@ namespace Spotify {
             }
         }
 
-        auto result = HTTP::get(url, token);
-
-        if (result.code == RFC2616_Code::NO_CONTENT || result.code != RFC2616_Code::OK) {
-            std::cerr << WebTools::getHttpStatusText((int)result.code)<< std::endl;
-            return std::nullopt;
-        }
-
-        // Successfully received a body
-        if (result.body.empty()) {
-            std::cerr << "CRITICAL: No body received from request!" << std::endl;
-            return std::nullopt;
-        }
-
-        try {
-            auto data = nlohmann::json::parse(result.body);
-            return data.get<PagedTrackObject>();
-
-        } catch (const nlohmann::json::exception& e) {
-            std::cerr << "JSON Mapping failed: " << e.what() << std::endl;
-            return std::nullopt;
-        }
+        return fetchAndParse<PagedTrackObject>(url);
     }
 
     std::optional<PagedSavedAlbumObject> AlbumAPI::getUsersSavedAlbums(std::optional<int> limit, std::optional<int> offset, std::optional<std::string> market) const {
-        if (!m_client) return std::nullopt;
-
-        std::string token = tryGetAccessToken();
 
         std::string url = BASE_ALBUM_USER_URL;
 
@@ -175,33 +94,10 @@ namespace Spotify {
             }
         }
 
-        auto result = HTTP::get(url, token);
-
-        if (result.code == RFC2616_Code::NO_CONTENT || result.code != RFC2616_Code::OK) {
-            std::cerr << WebTools::getHttpStatusText((int)result.code)<< std::endl;
-            return std::nullopt;
-        }
-
-        // Successfully received a body
-        if (result.body.empty()) {
-            std::cerr << "CRITICAL: No body received from request!" << std::endl;
-            return std::nullopt;
-        }
-
-        try {
-            auto data = nlohmann::json::parse(result.body);
-            return data.get<PagedSavedAlbumObject>();
-
-        } catch (const nlohmann::json::exception& e) {
-            std::cerr << "JSON Mapping failed: " << e.what() << std::endl;
-            return std::nullopt;
-        }
+        return fetchAndParse<PagedSavedAlbumObject>(url);
     }
 
     std::optional<std::vector<bool> > AlbumAPI::checkUsersSavedAlbums(std::vector<std::string> ids) const {
-        if (!m_client) return std::nullopt;
-
-        std::string token = tryGetAccessToken();
 
         std::string id_list = Tools::toCSV(ids, 0, 20);
         if (id_list == "size-error") {
@@ -211,35 +107,10 @@ namespace Spotify {
 
         std::string url = BASE_ALBUM_URL + "/contains?ids=" + id_list;
 
-        auto result = HTTP::get(url, token);
-
-        if (result.code == RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
-            std::cerr << WebTools::getHttpStatusText((int)result.code)<< std::endl;
-            return std::nullopt;
-        }
-
-        // Successfully received a body
-        if (result.body.empty()) {
-            std::cerr << "CRITICAL: No body received from request!" << std::endl;
-            return std::nullopt;
-        }
-
-
-        try {
-            auto data = nlohmann::json::parse(result.body);
-            return data.get<std::vector<bool>>();
-
-        } catch (const nlohmann::json::exception& e) {
-            std::cerr << "JSON Mapping failed: " << e.what() << std::endl;
-            return std::nullopt;
-        }
+        return fetchAndParse<std::vector<bool>>(url);
     }
 
     std::optional<PagedAlbumObject> AlbumAPI::getNewReleases(std::optional<int> limit, std::optional<int> offset) const {
-        if (!m_client) return std::nullopt;
-
-        std::string token = tryGetAccessToken();
-
         std::string url = BASE_BROWSE_URL + "/new-releases";
 
         std::vector<std::string> params;
@@ -260,38 +131,12 @@ namespace Spotify {
             }
         }
 
-        auto result = HTTP::get(url, token);
-
-        if (result.code == RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
-            std::cerr << WebTools::getHttpStatusText((int)result.code)<< std::endl;
-            return std::nullopt;
-        }
-
-        // Successfully received a body
-        if (result.body.empty()) {
-            std::cerr << "CRITICAL: No body received from request!" << std::endl;
-            return std::nullopt;
-        }
-
-        try {
-            auto data = nlohmann::json::parse(result.body);
-            if (data.contains("albums"))
-                return data.at("albums").get<PagedAlbumObject>();
-            else
-                return std::nullopt;
-
-        } catch (const nlohmann::json::exception& e) {
-            std::cerr << "JSON Mapping failed: " << e.what() << std::endl;
-            return std::nullopt;
-        }
+        return fetchAndParse<PagedAlbumObject>(url, "albums");
     }
 
 
     // --- PUT ---
-    void AlbumAPI::SaveAlbumsForUser(std::vector<std::string> ids) const {
-        if (!m_client) return;
-
-        std::string token = tryGetAccessToken();
+    void AlbumAPI::saveAlbumsForUser(std::vector<std::string> ids) const {
 
         std::string id_list = Tools::toCSV(ids, 0, 20);
         if (id_list == "size-error") {
@@ -301,25 +146,12 @@ namespace Spotify {
 
         std::string url = BASE_ALBUM_USER_URL + "?ids=" + id_list;
 
-
-        nlohmann::json j;
-        j["ids"] = id_list;
-
-        std::string body = j.dump();
-
-        auto result = HTTP::put(url, token , body);
-
-        if (result.code != RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
-            std::cerr << "Transfer Playback failed: " << (int)result.code << " - " << result.body << std::endl;
-        }
+        sendAction("PUT", url);
     }
 
 
     // --- DELETE ---
-    void AlbumAPI::RemoveUsersSavedAlbums(std::vector<std::string> ids) const {
-        if (!m_client) return;
-
-        std::string token = tryGetAccessToken();
+    void AlbumAPI::removeUsersSavedAlbums(std::vector<std::string> ids) const {
 
         std::string id_list = Tools::toCSV(ids, 0, 20);
         if (id_list == "size-error") {
@@ -332,25 +164,9 @@ namespace Spotify {
         nlohmann::json j;
         j["ids"] = id_list;
 
-        std::string body = j.dump();
-
-        auto result = HTTP::remove(url, token , body);
-
-        if (result.code != RFC2616_Code::NO_CONTENT && result.code != RFC2616_Code::OK) {
-            std::cerr << "Transfer Playback failed: " << (int)result.code << " - " << result.body << std::endl;
-        }
-
+        sendAction("DELETE", url, j.dump());
     }
 
 
-    // --- PRIVATE ---
-    std::string AlbumAPI::tryGetAccessToken() const {
-        try {
-            return m_client->getAccessToken();
-        } catch (...) {
-            std::cerr << "CRITICAL: Crash during AccessToken retrieval!" << std::endl;
-            throw;
-        }
-    }
 
 }

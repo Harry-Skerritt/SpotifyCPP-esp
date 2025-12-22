@@ -260,7 +260,7 @@ namespace Spotify {
         RestrictionsObject restrictions;
     };
 
-    struct SimplifiedAudioBookObject {
+    struct SimplifiedAudiobookObject {
         std::vector<AuthorObject> authors;
         std::vector<std::string> available_markets;
         std::vector<CopyrightObject> copyrights;
@@ -372,6 +372,7 @@ namespace Spotify {
     using PagedEpisodeObject = PagingObject<SimplifiedEpisodeObject>;
     using PagedPlaylistTrackObject = PagingObject<PlaylistTrackObject>;
     using PagedAlbumObject = PagingObject<SimplifiedAlbumObject>;
+    using PagedAudiobookObject = PagingObject<SimplifiedAudiobookObject>;
 
     // --- 'Main' Response Objects --
     struct AlbumObject {
@@ -432,7 +433,7 @@ namespace Spotify {
         bool is_local;
     };
 
-    struct AudioBookObject {
+    struct AudiobookObject {
         std::vector<AuthorObject> authors;
         std::vector<std::string> available_markets;
         std::vector<CopyrightObject> copyrights;
@@ -476,7 +477,7 @@ namespace Spotify {
         std::string type;
         std::string uri;
         RestrictionsObject restrictions;
-        SimplifiedAudioBookObject audiobook;
+        SimplifiedAudiobookObject audiobook;
     };
 
     struct EpisodeObject {
@@ -605,7 +606,7 @@ namespace Spotify {
     using SearchPlaylistObject = PagingObject<SimplifiedPlaylistObject>;
     using SearchShowsObject = PagingObject<SimplifiedShowObject>;
     using SearchEpisodesObject = PagingObject<SimplifiedEpisodeObject>;
-    using SearchAudioBookObject = PagingObject<SimplifiedAudioBookObject>;
+    using SearchAudioBookObject = PagingObject<SimplifiedAudiobookObject>;
 
     struct SearchObject {
         std::optional<SearchTrackObject> tracks;
@@ -628,6 +629,10 @@ namespace Spotify {
 
     struct ArtistListObject {
         std::vector<ArtistObject> artists;
+    };
+
+    struct AudiobookListObject {
+        std::vector<AudiobookObject> audiobooks;
     };
 
     struct TrackListObject {

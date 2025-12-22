@@ -11,16 +11,15 @@
 #include <iostream>
 #include "spotify/util/Types.h"
 #include "spotify/util/JsonMapping.hpp"
+#include "spotify/api/BaseAPI.hpp"
 
 namespace Spotify {
 
-    class Client;
-
-    class AlbumAPI {
+    class AlbumAPI : public BaseAPI {
     // Funcs
     public:
 
-        explicit AlbumAPI(Client* client);
+        explicit AlbumAPI(Client* client) : BaseAPI(client) {};
 
         // GET
         [[nodiscard]] std::optional<AlbumObject> getAlbum(const std::string &id, std::optional<std::string> market = std::nullopt) const;
@@ -34,20 +33,17 @@ namespace Spotify {
 
 
         // PUT
-        void SaveAlbumsForUser(std::vector<std::string> ids) const;
+        void saveAlbumsForUser(std::vector<std::string> ids) const;
 
         // DELETE
-        void RemoveUsersSavedAlbums(std::vector<std::string> ids) const;
+        void removeUsersSavedAlbums(std::vector<std::string> ids) const;
 
 
     private:
-        [[nodiscard]] std::string tryGetAccessToken() const;
 
     // Vars
     public:
     private:
-        Client* m_client;
-
         const std::string BASE_ALBUM_URL = "https://api.spotify.com/v1/albums";
         const std::string BASE_ALBUM_USER_URL = "https://api.spotify.com/v1/me/albums";
         const std::string BASE_BROWSE_URL = "https://api.spotify.com/v1/browse";

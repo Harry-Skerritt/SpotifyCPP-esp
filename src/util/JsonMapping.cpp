@@ -222,7 +222,7 @@ namespace Spotify {
         map_object(j, "restrictions", c.restrictions);
     }
 
-    void from_json(const json &j, SimplifiedAudioBookObject &a) {
+    void from_json(const json &j, SimplifiedAudiobookObject &a) {
         a.authors = j.value("authors", std::vector<AuthorObject>{});
         a.available_markets = j.value("available_markets", std::vector<std::string>{});
         a.copyrights = j.value("copyrights", std::vector<CopyrightObject>{});
@@ -418,7 +418,7 @@ namespace Spotify {
         a.is_local = j.value("is_local", false);
     }
 
-    void from_json(const json &j, AudioBookObject &a) {
+    void from_json(const json &j, AudiobookObject &a) {
         a.authors = j.value("authors", std::vector<AuthorObject>{});
         a.available_markets = j.value("available_markets", std::vector<std::string>{});
         a.copyrights = j.value("copyrights", std::vector<CopyrightObject>{});
@@ -612,6 +612,9 @@ namespace Spotify {
     void from_json(const json &j, ArtistListObject &al) {
         al.artists = j.value("artists", std::vector<ArtistObject>{});
     }
+    void from_json(const json &j, AudiobookListObject &ab) {
+        ab.audiobooks = j.value("audiobooks", std::vector<AudiobookObject>{});
+    }
 
     void from_json(const json &j, TrackListObject &tl) {
         tl.tracks = j.value("tracks", std::vector<TrackObject>{});
@@ -624,11 +627,17 @@ namespace Spotify {
     }
 
 
+
+    // --- Explicit Paging Implementation ---
+
+    template void from_json<TrackObject>(const json& j, PagingObject<TrackObject>& p);
+    template void from_json<SimplifiedChapterObject>(const json& j, PagingObject<SimplifiedChapterObject>& p);
+    template void from_json<ArtistObject>(const json& j, PagingObject<ArtistObject>& p);
+    template void from_json<SimplifiedAlbumObject>(const json& j, PagingObject<SimplifiedAlbumObject>& p);
+    template void from_json<SimplifiedTrackObject>(const json& j, PagingObject<SimplifiedTrackObject>& p);
+    template void from_json<PlaylistTrackObject>(const json& j, PagingObject<PlaylistTrackObject>& p);
+    template void from_json<SavedAlbumObject>(const json& j, PagingObject<SavedAlbumObject>& p);
+    template void from_json<PlayHistoryObject>(const json& j, PagingObject<PlayHistoryObject>& p);
+
 }
 
-template void Spotify::from_json<Spotify::PlayHistoryObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::PlayHistoryObject>& p);
-template void Spotify::from_json<Spotify::TrackObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::TrackObject>& p);
-template void Spotify::from_json<Spotify::ArtistObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::ArtistObject>& p);
-template void Spotify::from_json<Spotify::SimplifiedAlbumObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::SimplifiedAlbumObject>& p);
-template void Spotify::from_json<Spotify::PlaylistTrackObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::PlaylistTrackObject>& p);
-template void Spotify::from_json<Spotify::SavedAlbumObject>(const nlohmann::json& j, Spotify::PagingObject<Spotify::SavedAlbumObject>& p);
