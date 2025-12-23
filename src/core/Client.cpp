@@ -7,7 +7,7 @@
 #include "spotify/api/AlbumAPI.hpp"
 #include "spotify/api/ArtistAPI.hpp"
 #include "spotify/api/AudiobookAPI.hpp"
-#include "spotify/api/BrowseAPI.h"
+#include "spotify/api/BrowseAPI.hpp"
 #include "spotify/api/CategoryAPI.hpp"
 #include "spotify/api/ChapterAPI.hpp"
 #include "spotify/api/EpisodeAPI.hpp"

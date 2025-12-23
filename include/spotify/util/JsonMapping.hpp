@@ -86,6 +86,7 @@ namespace Spotify {
 
     void from_json(const json& j, SavedAlbumObject& s);
     void from_json(const json& j, SavedEpisodeObject& e);
+    void from_json(const json& j, SavedTrackObject& t);
 
 
     // --- Explicit Paging Instantiations ---
@@ -97,6 +98,7 @@ namespace Spotify {
     extern template void from_json<PlaylistTrackObject>(const json&, PagingObject<PlaylistTrackObject>&);
     extern template void from_json<SavedAlbumObject>(const json&, PagingObject<SavedAlbumObject>&);
     extern template void from_json<SavedEpisodeObject>(const json&, PagingObject<SavedEpisodeObject>&);
+    extern template void from_json<SavedTrackObject>(const json&, PagingObject<SavedTrackObject>&);
     extern template void from_json<PlayHistoryObject>(const json&, PagingObject<PlayHistoryObject>&);
     extern template void from_json<CategoryObject>(const json&, PagingObject<CategoryObject>&);
 

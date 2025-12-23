@@ -4,7 +4,7 @@
 #pragma once
 
 #include <utility>
-#include "spotify/api/BrowseAPI.h"
+#include "spotify/api/BrowseAPI.hpp"
 
 #include "nlohmann/json.hpp"
 #include "spotify/core/Client.hpp"
