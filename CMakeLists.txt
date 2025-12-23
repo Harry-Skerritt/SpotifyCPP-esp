@@ -188,9 +188,6 @@ target_link_libraries(example_deleteUserEpisode PRIVATE SpotifyAPILib)
 set_example_output_dir(example_deleteUserEpisode "episodes")
 
 
-# --- ... ---
-
-
 # --- Player Examples ---
 add_executable(example_getPlaybackState examples/player/getPlaybackStateExample.cpp)
 target_link_libraries(example_getPlaybackState PRIVATE SpotifyAPILib)
@@ -230,3 +227,20 @@ add_executable(example_addToQueue examples/player/addToQueueExample.cpp)
 target_link_libraries(example_addToQueue PRIVATE SpotifyAPILib)
 set_example_output_dir(example_addToQueue "player")
 
+
+# --- Track Examples ---
+add_executable(example_getTrack examples/tracks/getTrackExample.cpp)
+target_link_libraries(example_getTrack PRIVATE SpotifyAPILib)
+set_example_output_dir(example_getTrack "tracks")
+
+add_executable(example_getUserTracks examples/tracks/getUserTracksExample.cpp)
+target_link_libraries(example_getUserTracks PRIVATE SpotifyAPILib)
+set_example_output_dir(example_getUserTracks "tracks")
+
+add_executable(example_saveUserTracks examples/tracks/saveTrackForUserExample.cpp)
+target_link_libraries(example_saveUserTracks PRIVATE SpotifyAPILib)
+set_example_output_dir(example_saveUserTracks "tracks")
+
+add_executable(example_deleteUserTracks examples/tracks/removeTrackForUserExample.cpp)
+target_link_libraries(example_deleteUserTracks PRIVATE SpotifyAPILib)
+set_example_output_dir(example_deleteUserTracks "tracks")
