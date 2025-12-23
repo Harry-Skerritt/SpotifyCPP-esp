@@ -22,6 +22,7 @@ namespace Spotify {
     class ChapterAPI;
     class EpisodeAPI;
     class PlayerAPI;
+    class TrackAPI;
 
     class Client {
     // Funcs
@@ -39,6 +40,7 @@ namespace Spotify {
         ChapterAPI chapter();
         EpisodeAPI episode();
         PlayerAPI player();
+        TrackAPI track();
 
 
     // Vars

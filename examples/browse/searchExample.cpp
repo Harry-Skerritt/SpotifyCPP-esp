@@ -18,6 +18,7 @@ int main () {
 
     auto search = client.browse().searchForItem(search_query, search_types, "GB");
 
+
     if (search.has_value()) {
         if (search->artists.has_value()) {
             auto artists = search->artists.value();

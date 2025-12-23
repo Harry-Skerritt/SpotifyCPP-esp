@@ -181,5 +181,12 @@ namespace Spotify {
         std::ranges::transform(upper, upper.begin(), ::toupper);
         return std::ranges::binary_search(valid_markets, upper);
     }
+
+    std::string Tools::getISOTimestamp() {
+        auto now = std::chrono::system_clock::now();
+
+        return std::format("{:%FT%TZ}", std::chrono::floor<std::chrono::seconds>(now));
+    }
+
 }
 

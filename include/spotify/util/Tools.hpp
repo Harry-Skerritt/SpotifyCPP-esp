@@ -12,6 +12,8 @@
 #include <iomanip>
 #include <iostream>
 #include <fstream>
+#include <chrono>
+#include <format>
 
 #include "Types.h"
 
@@ -53,6 +55,8 @@ namespace Spotify::Tools {
         "TZ","UA","UG","US","UY","UZ","VC","VE","VN","VU",
         "WS","XK","ZA","ZM","ZW"
     };
+
+    std::string getISOTimestamp();
 }
 
 
