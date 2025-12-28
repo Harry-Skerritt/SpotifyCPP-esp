@@ -22,10 +22,7 @@ namespace Spotify {
     std::optional<ArtistListObject> ArtistAPI::getMultipleArtists(const std::vector<std::string> &ids) const {
 
         std::string id_list = Tools::toCSV(ids, 0, 20);
-        if (id_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 20 IDs." << std::endl;
-            return std::nullopt;
-        }
+
 
         std::string url = BASE_ARTIST_URL + "?ids=" + id_list;
 

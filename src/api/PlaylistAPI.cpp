@@ -191,10 +191,6 @@ namespace Spotify {
         std::string url = BASE_PLAYLIST_URL + "/" + playlist_id + "/tracks";
 
         std::string uri_list = Tools::toCSV(uris, 1, 100);
-        if (uri_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 100 URIs" << std::endl;
-            return;
-        }
 
         nlohmann::json j;
         j["uris"] = uri_list;
@@ -237,28 +233,24 @@ namespace Spotify {
             // Is URL
             auto result = HTTP::getImage(image_path);
 
-            if (result.code == RFC2616_Code::OK) {
-                raw_image_data = result.body;
-            } else {
-                std::cerr << "Failed to download image from URL." << result.body << std::endl;
-                return;
+            if (result.code != RFC2616_Code::OK) {
+                throw APIException({static_cast<int>(result.code), "Failed to download image from URL", "IMAGE_DOWNLOAD_FAILED"});
             }
+
+            raw_image_data = result.body;
         } else {
             // Is File
             std::ifstream file(image_path, std::ios::binary);
-            if (file.is_open()) {
-                std::stringstream buffer;
-                buffer << file.rdbuf();
-                raw_image_data = buffer.str();
-            } else {
-                std::cerr << "Could not open local file: " << image_path << std::endl;
-                return;
+            if (!file.is_open()) {
+                throw LogicException("Could not open local image file: " + image_path);
             }
+            std::stringstream buffer;
+            buffer << file.rdbuf();
+            raw_image_data = buffer.str();
         }
 
         if (raw_image_data.size() > 256 * 1024) {
-            std::cerr << "Image too large (Max 256KB). Size: " << raw_image_data.size() / 1024 << "KB" << std::endl;
-            return;
+            throw LogicException("Image too large (Max 256KB). Provided size: " +  std::to_string(raw_image_data.size() / 1024) + "KB");
         }
         std::string base64_image = base64_encode(raw_image_data);
 
@@ -279,9 +271,8 @@ namespace Spotify {
         const std::optional<int> &position) const {
         std::string url = BASE_PLAYLIST_URL + "/" + playlist_id + "/tracks";
 
-        if (uris.size() > 100 || uris.size() < 1) {
-            std::cerr << "Error: You must provide between 1 and 100 URIs" << std::endl;
-            return;
+        if (uris.empty() || uris.size() > 100) {
+            throw LogicException("You must provide between 1 and 100 URIs.");
         }
 
         nlohmann::json j;
@@ -329,8 +320,7 @@ namespace Spotify {
 
                 return data.get<PlaylistObject>();
             } catch (const std::exception& e) {
-                std::cerr << "JSON Mapping Error: " << e.what() << std::endl;
-                return std::nullopt;
+                throw ParseException("Failed to map JSON to PlaylistObject: " + std::string(e.what()), *body);
             }
         }
 

@@ -28,11 +28,6 @@ namespace Spotify {
 
         std::string id_list = Tools::toCSV(ids, 0, 50);
 
-        if (id_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 50 IDs." << std::endl;
-            return std::nullopt;
-        }
-
         std::string url = BASE_CHAPTER_URL + "?ids=" + id_list;
 
         if (market.has_value() && !market->empty() && Tools::isValidMarket(*market)) {

@@ -10,9 +10,12 @@ namespace Spotify {
     std::string BaseAPI::tryGetAccessToken() const {
         try {
             return m_client->getAccessToken();
-        } catch (...) {
-            std::cerr << "CRITICAL: Crash during AccessToken retrieval!" << std::endl;
-            throw;
+        }
+        catch (const Spotify::Exception& e) {
+            throw Spotify::Exception("API Request failed: Could not retrieve a valid Access Token. Details: " + std::string(e.what()));
+        }
+        catch (const std::exception& e) {
+            throw Spotify::Exception("Internal System Error during token retrieval: " + std::string(e.what()));
         }
     }
 

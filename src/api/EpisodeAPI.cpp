@@ -29,10 +29,6 @@ namespace Spotify {
 
         std::string id_list = Tools::toCSV(ids, 0, 50);
 
-        if (id_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 50 IDs." << std::endl;
-            return std::nullopt;
-        }
 
         std::string url = BASE_EPISODE_URL + "?ids=" + id_list;
 
@@ -73,10 +69,6 @@ namespace Spotify {
 
     std::optional<std::vector<bool> > EpisodeAPI::checkUsersSavedEpisodes(const std::vector<std::string> &ids) const {
         std::string id_list = Tools::toCSV(ids, 0, 20);
-        if (id_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 20 IDs." << std::endl;
-            return std::nullopt;
-        }
 
         std::string url = BASE_EPISODE_USER_URL + "/contains?ids=" + id_list;
 
@@ -87,10 +79,6 @@ namespace Spotify {
     void EpisodeAPI::saveEpisodeForUser(std::vector<std::string> &ids) const {
 
         std::string id_list = Tools::toCSV(ids, 0, 50);
-        if (id_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 50 IDs." << std::endl;
-            return;
-        }
 
         std::string url = BASE_EPISODE_USER_URL + "?ids=" + id_list;
 
@@ -101,10 +89,6 @@ namespace Spotify {
     void EpisodeAPI::removeUserSavedEpisodes(std::vector<std::string> &ids) const {
 
         std::string id_list = Tools::toCSV(ids, 0, 50);
-        if (id_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 50 IDs." << std::endl;
-            return;
-        }
 
         std::string url = BASE_EPISODE_USER_URL + "?ids=" + id_list;
 

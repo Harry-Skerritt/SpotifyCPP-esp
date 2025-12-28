@@ -28,11 +28,6 @@ namespace Spotify {
     std::optional<TrackListObject> TrackAPI::getTracks(const std::vector<std::string> &ids, const std::optional<std::string> &market) const {
         std::string id_list = Tools::toCSV(ids, 0, 50);
 
-        if (id_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 50 IDs." << std::endl;
-            return std::nullopt;
-        }
-
         std::string url = BASE_TRACK_URL + "?ids=" + id_list;
 
         if (market.has_value() && !market->empty() && Tools::isValidMarket(*market)) {
@@ -72,10 +67,6 @@ namespace Spotify {
 
     std::optional<std::vector<bool> > TrackAPI::checkUsersSavedTracks(const std::vector<std::string> &ids) const {
         std::string id_list = Tools::toCSV(ids, 0, 50);
-        if (id_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 50 IDs." << std::endl;
-            return std::nullopt;
-        }
 
         std::string url = BASE_TRACK_USER_URL + "/contains?ids=" + id_list;
 
@@ -86,10 +77,6 @@ namespace Spotify {
     // --- PUT ---
     void TrackAPI::saveTracksForUser(const std::vector<std::string> &ids) const {
         if (ids.empty()) return;
-        if (ids.size() > 50) {
-            std::cerr << "Error: You must provide less than 50 IDs." << std::endl;
-            return;
-        }
 
         nlohmann::json j;
         j["ids"] = ids;
@@ -100,8 +87,7 @@ namespace Spotify {
     void TrackAPI::saveTracksForUser(const std::vector<TimestampIDObject> &timestamped_ids) const {
         if (timestamped_ids.empty()) return;
         if (timestamped_ids.size() > 50) {
-            std::cerr << "Error: You must provide less than 50 timestamped IDs." << std::endl;
-            return;
+            throw LogicException("You must provide less than 50 timestamped IDs");
         }
 
         nlohmann::json j = nlohmann::json::object();
@@ -121,10 +107,6 @@ namespace Spotify {
     // --- DELETE ---
     void TrackAPI::removeUsersSavedTracks(std::vector<std::string> ids) const {
         std::string id_list = Tools::toCSV(ids, 0, 20);
-        if (id_list == "size-error") {
-            std::cerr << "Error: You must provide between 1 and 20 IDs." << std::endl;
-            return;
-        }
 
         std::string url = BASE_TRACK_USER_URL + "?ids=" + id_list;
 
