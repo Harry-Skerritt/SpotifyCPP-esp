@@ -28,6 +28,7 @@
 
 // Core
 #include "spotify/core/Client.hpp"
+#include "spotify/core/Errors.hpp"
 
 
 // Utils
@@ -35,6 +36,7 @@
 #include "spotify/util/Types.h"
 
 /*
+ * Internal Utils
 #include "spotify/util/base64.hpp"
 #include "spotify/util/Http.hpp"
 #include "spotify/util/JsonMapping.hpp"
