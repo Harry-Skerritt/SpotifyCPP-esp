@@ -5,6 +5,8 @@
 #ifndef AUTHSERVER_H
 #define AUTHSERVER_H
 
+#pragma once
+
 #include <optional>
 #include <string>
 #include <fstream>

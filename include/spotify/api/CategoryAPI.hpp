@@ -9,7 +9,7 @@
 #include <string>
 #include <optional>
 #include <iostream>
-#include "spotify/util/Types.h"
+#include "spotify/models/Types.hpp"
 #include "spotify/util/JsonMapping.hpp"
 #include "spotify/api/BaseAPI.hpp"
 

@@ -5,6 +5,9 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#pragma once
+
+
 #include <random>
 #include <utility>
 #include <string>
@@ -15,7 +18,7 @@
 #include <chrono>
 #include <format>
 
-#include "Types.h"
+#include "../models/Types.hpp"
 
 namespace Spotify::WebTools {
     std::string generateRandomState(size_t length = 16);

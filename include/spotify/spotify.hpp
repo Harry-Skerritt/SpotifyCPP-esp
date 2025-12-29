@@ -34,8 +34,8 @@
 
 
 // Utils
-#include "spotify/util/Scopes.hpp"
-#include "spotify/util/Types.h"
+#include "models/Scopes.hpp"
+#include "spotify/models/Types.hpp"
 
 /*
  * Internal Utils

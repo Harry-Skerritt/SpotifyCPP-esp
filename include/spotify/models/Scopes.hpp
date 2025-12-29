@@ -5,6 +5,8 @@
 #ifndef SCOPES_HPP
 #define SCOPES_HPP
 
+#pragma once
+
 #include <string>
 
 namespace Spotify {

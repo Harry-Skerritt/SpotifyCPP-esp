@@ -5,6 +5,8 @@
 #ifndef BASE64_H
 #define BASE64_H
 
+#pragma once
+
 #include <string>
 
 static const std::string base64_chars =

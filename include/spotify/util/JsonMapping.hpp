@@ -5,8 +5,10 @@
 #ifndef JSONMAPPING_H
 #define JSONMAPPING_H
 
+#pragma once
+
 #include "../thirdparty/nlohmann/json.hpp"
-#include "spotify/util/Types.h"
+#include "spotify/models/Types.hpp"
 
 using json = nlohmann::json;
 

@@ -5,6 +5,8 @@
 #ifndef ENDPOINTS_HPP
 #define ENDPOINTS_HPP
 
+#pragma once
+
 #include <string>
 
 namespace Spotify::Endpoints {

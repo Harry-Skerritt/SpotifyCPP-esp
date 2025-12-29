@@ -10,10 +10,10 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Types.h"
+#include "../models/Types.hpp"
 
 
-    namespace Spotify::HTTP {
+namespace Spotify::HTTP {
         struct Result {
             Spotify::RFC2616_Code code;
             std::string body;

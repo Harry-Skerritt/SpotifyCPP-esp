@@ -5,6 +5,8 @@
 #ifndef AUTH_H
 #define AUTH_H
 
+#pragma once
+
 #include <random>
 #include <utility>
 #include <string>
@@ -15,9 +17,9 @@
 #include <curl/curl.h>
 
 #include "spotify/util/Tools.hpp"
-#include "spotify/util/Types.h"
+#include "spotify/models/Types.hpp"
 #include "spotify/util/base64.hpp"
-#include "spotify/util/Scopes.hpp"
+#include "../models/Scopes.hpp"
 
 
 namespace Spotify {
