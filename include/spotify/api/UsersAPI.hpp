@@ -23,17 +23,17 @@ namespace Spotify {
 
         // GET
 
-        std::optional<UserObject> getCurrentUserProfile() const;
-        std::optional<PagedArtistObject> getUsersTopArtists(const std::optional<std::string>& time_range = std::nullopt,
+        [[nodiscard]] std::optional<UserObject> getCurrentUserProfile() const;
+        [[nodiscard]] std::optional<PagedArtistObject> getUsersTopArtists(const std::optional<std::string>& time_range = std::nullopt,
             const std::optional<int>& limit = std::nullopt, const std::optional<int>& offset = std::nullopt) const;
-        std::optional<PagedTrackObject> getUsersTopTracks(const std::optional<std::string>& time_range = std::nullopt,
+        [[nodiscard]] std::optional<PagedTrackObject> getUsersTopTracks(const std::optional<std::string>& time_range = std::nullopt,
             const std::optional<int>& limit = std::nullopt, const std::optional<int>& offset = std::nullopt) const;
-        std::optional<UserObject> getUsersProfile(const std::string& user_id) const;
-        std::optional<PagedArtistObject> getFollowedArtists(const std::string& type = "artist",
+        [[nodiscard]] std::optional<UserObject> getUsersProfile(const std::string& user_id) const;
+        [[nodiscard]] std::optional<PagedArtistObject> getFollowedArtists(const std::string& type = "artist",
             const std::optional<std::string>& after = std::nullopt, const std::optional<int>& limit = std::nullopt) const;
-        std::optional<std::vector<bool>> checkUserFollowsArtists(const std::vector<std::string>& ids) const;
-        std::optional<std::vector<bool>> checkUserFollowsUsers(const std::vector<std::string>& ids) const;
-        std::optional<std::vector<bool>> checkUserFollowsPlaylist(const std::string& playlist_id, const std::optional<std::string>& id) const;
+        [[nodiscard]] std::optional<std::vector<bool>> checkUserFollowsArtists(const std::vector<std::string>& ids) const;
+        [[nodiscard]] std::optional<std::vector<bool>> checkUserFollowsUsers(const std::vector<std::string>& ids) const;
+        [[nodiscard]] std::optional<std::vector<bool>> checkUserFollowsPlaylist(const std::string& playlist_id, const std::optional<std::string>& id) const;
 
         // PUT
         void followPlaylist(const std::string& playlist_id, const std::optional<bool>& is_public = std::nullopt) const;

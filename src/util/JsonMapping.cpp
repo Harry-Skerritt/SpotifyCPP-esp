@@ -635,11 +635,14 @@ namespace Spotify {
         el.episodes = j.value("episodes", std::vector<EpisodeObject>{});
     }
 
-
+    void from_json(const json &j, ShowListObject &sl) {
+        sl.shows = j.value("shows", std::vector<ShowObject>{});
+    }
 
     void from_json(const json &j, TrackListObject &tl) {
         tl.tracks = j.value("tracks", std::vector<TrackObject>{});
     }
+
 
 
     void from_json(const json &j, SavedAlbumObject &s) {
@@ -650,6 +653,11 @@ namespace Spotify {
     void from_json(const json &j, SavedEpisodeObject &e) {
         e.added_at = j.value("added_at", "");
         map_object(j, "episode", e.episode);
+    }
+
+    void from_json(const json &j, SavedShowObject &s) {
+        s.added_at = j.value("added_at", "");
+        map_object(j, "show", s.show);
     }
 
     void from_json(const json &j, SavedTrackObject &t) {
@@ -668,6 +676,7 @@ namespace Spotify {
     template void from_json<SimplifiedPlaylistObject>(const json& j, PagingObject<SimplifiedPlaylistObject>& p);
     template void from_json<SavedAlbumObject>(const json& j, PagingObject<SavedAlbumObject>& p);
     template void from_json<SavedEpisodeObject>(const json& j, PagingObject<SavedEpisodeObject>& p);
+    template void from_json<SavedShowObject>(const json& j, PagingObject<SavedShowObject>& p);
     template void from_json<SavedTrackObject>(const json& j, PagingObject<SavedTrackObject>& p);
     template void from_json<PlayHistoryObject>(const json& j, PagingObject<PlayHistoryObject>& p);
     template void from_json<CategoryObject>(const json& j, PagingObject<CategoryObject>& p);

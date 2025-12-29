@@ -19,6 +19,7 @@
 #include "spotify/api/EpisodeAPI.hpp"
 #include "spotify/api/PlayerAPI.hpp"
 #include "spotify/api/PlaylistAPI.hpp"
+#include "spotify//api/ShowsAPI.hpp"
 #include "spotify/api/TrackAPI.hpp"
 #include "spotify/api/UsersAPI.hpp"
 

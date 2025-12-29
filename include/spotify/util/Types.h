@@ -675,9 +675,15 @@ namespace Spotify {
         std::vector<EpisodeObject> episodes;
     };
 
+    struct ShowListObject {
+        std::vector<ShowObject> shows;
+    };
+
     struct TrackListObject {
         std::vector<TrackObject> tracks;
     };
+
+
 
     struct SavedAlbumObject {
         std::string added_at;
@@ -692,6 +698,14 @@ namespace Spotify {
     };
 
     using PagedSavedEpisodeObject = PagingObject<SavedEpisodeObject>;
+
+
+    struct SavedShowObject {
+        std::string added_at;
+        ShowObject show;
+    };
+
+    using PagedSavedShowObject = PagingObject<SavedShowObject>;
 
     struct SavedTrackObject {
         std::string added_at;

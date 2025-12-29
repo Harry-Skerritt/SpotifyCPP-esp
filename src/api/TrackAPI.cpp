@@ -77,7 +77,7 @@ namespace Spotify {
 
     // --- PUT ---
     void TrackAPI::saveTracksForUser(const std::vector<std::string> &ids) const {
-        if (ids.empty()) return;
+        if (ids.empty()) throw Spotify::LogicException("IDs cannot be empty");;
 
         nlohmann::json j;
         j["ids"] = ids;
@@ -86,7 +86,7 @@ namespace Spotify {
     }
 
     void TrackAPI::saveTracksForUser(const std::vector<TimestampIDObject> &timestamped_ids) const {
-        if (timestamped_ids.empty()) return;
+        if (timestamped_ids.empty()) throw Spotify::LogicException("IDs cannot be empty");;
         if (timestamped_ids.size() > 50) {
             throw LogicException("You must provide less than 50 timestamped IDs");
         }

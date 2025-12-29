@@ -23,11 +23,11 @@ namespace Spotify {
         explicit TrackAPI(Client* client) : BaseAPI(client) {};
 
         // GET
-        std::optional<TrackObject> getTrack(const std::string& id, const std::optional<std::string>& market = std::nullopt) const;
-        std::optional<TrackListObject> getTracks(const std::vector<std::string>& ids, const std::optional<std::string>& market = std::nullopt) const;
-        std::optional<PagedSavedTrackObject> getUserSavedTracks(const std::optional<std::string>& market = std::nullopt,
+        [[nodiscard]] std::optional<TrackObject> getTrack(const std::string& id, const std::optional<std::string>& market = std::nullopt) const;
+        [[nodiscard]] std::optional<TrackListObject> getTracks(const std::vector<std::string>& ids, const std::optional<std::string>& market = std::nullopt) const;
+        [[nodiscard]] std::optional<PagedSavedTrackObject> getUserSavedTracks(const std::optional<std::string>& market = std::nullopt,
             const std::optional<int>& limit = std::nullopt, const std::optional<int>& offset = std::nullopt) const;
-        std::optional<std::vector<bool>> checkUsersSavedTracks(const std::vector<std::string>& ids) const;
+        [[nodiscard]] std::optional<std::vector<bool>> checkUsersSavedTracks(const std::vector<std::string>& ids) const;
 
         // PUT
         void saveTracksForUser(const std::vector<std::string>& ids) const;
