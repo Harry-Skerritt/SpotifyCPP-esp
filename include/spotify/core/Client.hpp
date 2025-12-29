@@ -24,6 +24,7 @@ namespace Spotify {
     class EpisodeAPI;
     class PlayerAPI;
     class PlaylistAPI;
+    class ShowsAPI;
     class TrackAPI;
     class UsersAPI;
 
@@ -44,6 +45,7 @@ namespace Spotify {
         EpisodeAPI episode();
         PlayerAPI player();
         PlaylistAPI playlist();
+        ShowsAPI shows();
         TrackAPI track();
         UsersAPI users();
 
