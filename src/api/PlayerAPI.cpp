@@ -139,8 +139,7 @@ namespace Spotify {
     void PlayerAPI::transferPlayback(const std::vector<std::string>& device_ids, std::optional<bool> play) const {
 
         if (device_ids.size() != 1) {
-            std::cerr << "device_ids must have size of 1. Current size: " << device_ids.size() << std::endl;
-            return;
+            throw Spotify::LogicException("Device Ids size must be 1");
         }
 
         nlohmann::json j;
