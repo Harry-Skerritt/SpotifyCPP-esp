@@ -17,7 +17,6 @@ int main () {
     auto single_album = client.album().getAlbum(album_id);
 
 
-
     std::cout << "     * Single Album *      " << std::endl;
     std::cout << "---------------------------" << std::endl;
     std::cout << single_album.name << " by " << single_album.artists.at(0).name << std::endl;
@@ -26,8 +25,12 @@ int main () {
     std::cout << "Album Popularity: " << single_album.popularity << std::endl;
 
     // Multi Album
-    std::vector<std::string> album_ids { "6TZp52tXShLQbq8yNMxqNT", "3kB4VjXKKCY7l5xeH113Da", "3YhgdRfaZrVIOORGK9SNiV" };
-    auto multi_albums = client.album().getMultipleAlbums(album_ids);
+    std::vector<std::string> album_urls {
+        "https://open.spotify.com/album/6TZp52tXShLQbq8yNMxqNT?si=NFZf8rVTTYa724KzZi6N4g",
+        "https://open.spotify.com/album/3kB4VjXKKCY7l5xeH113Da?si=10a580278fb549ec",
+        "https://open.spotify.com/album/3YhgdRfaZrVIOORGK9SNiV?si=238d67a1f0c044c6"
+    };
+    auto multi_albums = client.album().getMultipleAlbums(Spotify::Parse::extractIDs(album_urls));
 
     std::cout << "\n\n      * Multi Album *      " << std::endl;
     std::cout << "---------------------------" << std::endl;
