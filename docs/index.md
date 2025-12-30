@@ -2,6 +2,7 @@
 
 # Todo:
 * ~~Fix endpoint examples~~
+* Add back the not playing handler
 * Add endpoint examples for ShowsAPI
 * ~~Clean up Types.h~~
 * ~~Clean up includes in .hpps~~
@@ -14,15 +15,18 @@
 * Add .md docs for more details
 * Add real-world examples alongside the endpoint ones
 * Try to fix CMake so the configs are showing in folders 
+* Add helpers for getting IDs and URIs from URls
+* Add README.md
+* Add License
 * Deploy 1.0.0
 
 # To Add:
 
-# 1.0.5
+# 1.1.0
 * Add custom  endpoints for custom functionality
 
-## 1.1.0
+## 1.2.0
 * Add deprecated endpoints back for legacy use
 
-## 1.2.0
-* Add lyrics
+## 1.3.0
+* Add lyrics support
