@@ -14,7 +14,7 @@
 * Add .md docs for more details
 * ~~Add real-world examples alongside the endpoint ones~~
 * ~~Add helpers for getting IDs and URIs from URls~~
-* Add README.md
+* ~~Add README.md~~
 * ~~Add License~~
 * Deploy 1.0.0
 
