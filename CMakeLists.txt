@@ -85,6 +85,10 @@ add_executable(example_PlaybackControl examples/realworld/playback_control.cpp)
 target_link_libraries(example_PlaybackControl PRIVATE SpotifyAPILib)
 set_example_output_dir(example_PlaybackControl "realworld" "playback_control")
 
+add_executable(example_topTracksPlaylist examples/realworld/playlist_management.cpp)
+target_link_libraries(example_topTracksPlaylist PRIVATE SpotifyAPILib)
+set_example_output_dir(example_topTracksPlaylist "realworld" "top_tracks_playlist")
+
 # --- Endpoint Examples ---
 # --- Auth Examples ---
 add_executable(example_authManual examples/endpoints/auth/authManualExample.cpp)

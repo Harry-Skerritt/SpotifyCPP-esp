@@ -21,7 +21,7 @@ RepeatState nextRepeatState(RepeatState state) {
 }
 
 int main() {
-std::cout << "Starting " << getLibraryName()
+    std::cout << "Starting " << getLibraryName()
              << " v" << getLibraryVersion() << std::endl;
     std::cout << "Copyright (c) 2025 Harry Skerritt" << std::endl;
     std::cout << "--------------------------------------------" << "\n" << std::endl;
