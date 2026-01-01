@@ -47,10 +47,12 @@ namespace Spotify {
         }
 
         if (include_external)
-            if (include_external == "audio")
+            if (include_external == "audio") {
                 url += "&include_external=audio";
-            else
+            }
+            else {
                 throw LogicException("include_external can only be equal to 'audio'");
+            }
 
         return fetchAndParse<SearchObject>(url);
 

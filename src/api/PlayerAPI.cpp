@@ -123,11 +123,11 @@ namespace Spotify {
 
     // --- POST ---
     void PlayerAPI::skipToNext(const std::optional<std::string>& device_id) const {
-        skipHelper(true, std::move(device_id));
+        skipHelper(true, device_id);
     }
 
     void PlayerAPI::skipToPrevious(const std::optional<std::string>& device_id) const {
-        skipHelper(false, std::move(device_id));
+        skipHelper(false, device_id);
     }
 
     void PlayerAPI::addItemToQueue(
@@ -277,6 +277,6 @@ namespace Spotify {
             url += "?device_id=" + *device_id;
         }
 
-        (void)sendAction("PUT", url, "");
+        (void)sendAction("POST", url, "");
     }
 }

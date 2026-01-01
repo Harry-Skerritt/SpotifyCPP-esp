@@ -41,6 +41,13 @@ namespace Spotify::detail {
         return csv;
     }
 
+    inline RepeatState repeatStateFromString(const std::string& value) {
+      if (value == "off")     return RepeatState::Off;
+      if (value == "track")   return RepeatState::Track;
+      if (value == "context") return RepeatState::Context;
+      return RepeatState::Off;
+  }
+
 }
 
 #endif //INTERNALHELPERS_H

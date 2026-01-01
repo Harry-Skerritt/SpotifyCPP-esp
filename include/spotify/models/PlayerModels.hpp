@@ -61,7 +61,7 @@ namespace Spotify {
     // Playback
     struct PlaybackObject {
         DeviceObject device;
-        std::string repeat_state;
+        RepeatState repeat_state;
         bool shuffle_state;
         ContextObject context;
         long long timestamp;

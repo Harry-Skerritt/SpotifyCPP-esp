@@ -4,6 +4,8 @@
 
 #include "../../include/spotify/util/parse/JsonMapping.hpp"
 
+#include "spotify/util/parse/InternalHelpers.hpp"
+
 namespace Spotify {
     template<typename T>
     void map_optional(const json &j, const std::string &key, std::optional<T> &field) {
@@ -521,7 +523,9 @@ namespace Spotify {
 
     void from_json(const json &j, PlaybackObject &p) {
         if (j.contains("device")) p.device = j.at("device").get<DeviceObject>();
-        p.repeat_state = j.value("repeat_state", "");
+        p.repeat_state = detail::repeatStateFromString(
+            j.value("repeat_state", "")
+        );
         p.shuffle_state = j.value("shuffle_state", false);
         map_object(j, "context", p.context);
         p.timestamp = j.value("timestamp", 0LL);
