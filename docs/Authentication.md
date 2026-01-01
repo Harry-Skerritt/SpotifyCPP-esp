@@ -22,7 +22,7 @@ auto url = auth.createAuthoriseURL(
 
 **⚠️ The redirect URI must match exactly what is registered in your Spotify developer app, including trailing slashes**
 
-See information on [`Scopes`](/docs/APIReference/Scopes.md)
+See information on [`Scopes`](/docs/Types/Scope.md)
 
 ## Step 2 - Capture the code
 Once you have the authorisation URL the user will need to click it and allow the app access
@@ -55,7 +55,7 @@ The authorization code is not yet an access token, however the one line of code 
 auth.exchangeCode(code);
 ```
 
-*See more on [`AuthResponse`](/docs/Types/Scope.md)*
+*See more on [`AuthResponse`](/docs/Types/Auth.md)*
 
 
 ## Step 4 - Refreshing Access Token

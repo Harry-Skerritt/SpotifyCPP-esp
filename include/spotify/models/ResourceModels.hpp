@@ -26,16 +26,6 @@ namespace Spotify {
     struct ShowObject;
     struct EpisodeObject;
 
-    /*
-    // --- Forward Declarations - Simple ---
-    struct SimplifiedArtistObject;
-    struct SimplifiedAlbumObject;
-    struct SimplifiedAudiobookObject;
-    struct SimplifiedChapterObject;
-    struct SimplifiedTrackObject;
-    struct SimplifiedShowObject;
-    struct SimplifiedEpisodeObject;
-*/
 
     // --- Simplified Objects ---
     struct SimplifiedArtistObject {

@@ -252,12 +252,9 @@ if (!uris_opt) std::cout << "Failed: " << error << std::endl;
 
 
 ## Notes
-
-Use `tryExtract*` functions for safe parsing without exceptions.
-
-All ID validation assumes 22-character Base62 strings.
-
-URI functions automatically determine the resource type (`track`, `album`, `playlist`, etc.) from the URL or URI.
+- Use `tryExtract*` functions for safe parsing without exceptions.
+- All ID validation assumes 22-character Base62 strings.
+- URI functions automatically determine the resource type (`track`, `album`, `playlist`, etc.) from the URL or URI.
 
 
 
