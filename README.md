@@ -87,7 +87,7 @@ include(FetchContent)
 FetchContent_Declare(
     SpotifyCPP
     GIT_REPOSITORY https://github.com/Harry-Skerritt/SpotifyCpp.git
-    GIT_TAG v0.9.0
+    GIT_TAG v0.9.1
 )
 
 FetchContent_MakeAvailable(SpotifyCPP)
@@ -104,7 +104,7 @@ target_link_libraries(MyApp PRIVATE SpotifyCPP::SpotifyCPP)
 2. Add the following line to the `lib_deps` option of `[env:]` section:
 
 ```bash
-  harryskerritt/SpotifyCPP@^0.9.0
+  harryskerritt/SpotifyCPP@^0.9.1
 ```
 
 3. Build a project, PlatformIO will automatically install dependencies.
@@ -115,7 +115,7 @@ target_link_libraries(MyApp PRIVATE SpotifyCPP::SpotifyCPP)
 2. Change directory (cd) to the PlatformIO project where platformio.ini is located.
 3. Copy the following pio pkg install command and paste into the CLI shell, press Enter:
 ```bash
-    pio pkg install --library "harryskerritt/SpotifyCPP@^0.9.0"
+    pio pkg install --library "harryskerritt/SpotifyCPP@^0.9.1"
 ```
 
 
