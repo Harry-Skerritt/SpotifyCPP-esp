@@ -153,16 +153,11 @@ namespace Spotify {
 
     // --- DELETE ---
     void AlbumAPI::removeUsersSavedAlbums(const std::vector<std::string>& ids) const {
+       std::string id_list = detail::toCSV(ids, 0, 50); // Spotify allows up to 50 IDs per request
+       std::string url = Endpoints::MY_ALBUMS + "?ids=" + id_list;
 
-        std::string id_list = detail::toCSV(ids, 0, 20);
-
-        std::string url = Endpoints::MY_ALBUMS + "?ids=" + id_list;
-
-        nlohmann::json j;
-        j["ids"] = id_list;
-
-        (void)sendAction("DELETE", url, j.dump());
-    }
+       (void)sendAction("DELETE", url, "");
+   }
 
 
 
