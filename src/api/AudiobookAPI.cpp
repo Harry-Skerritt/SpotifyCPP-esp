@@ -8,7 +8,6 @@
 #include "spotify/core/Endpoints.hpp"
 #include "../../include/spotify/util/common/Tools.hpp"
 
-#include "nlohmann/json.hpp"
 
 
 
@@ -128,15 +127,23 @@ namespace Spotify {
 
     // --- DELETE ---
     void AudiobookAPI::removeUsersSavedAudiobooks(const std::vector<std::string>& ids) const {
+        if (ids.empty()) return;
+
+
         std::string id_list = detail::toCSV(ids, 0, 50);
-
-
         std::string url = Endpoints::MY_AUDIOBOOKS + "?ids=" + id_list;
 
-        nlohmann::json j;
-        j["ids"] = id_list;
 
-        (void)sendAction("DELETE", url, j.dump());
+        JsonDocument doc;
+        JsonArray idArray = doc["ids"].to<JsonArray>();
+        for (const auto& id : ids) {
+            idArray.add(id);
+        }
+
+        std::string body;
+        serializeJson(doc, body);
+
+        (void)sendAction("DELETE", url, body);
     }
 
 

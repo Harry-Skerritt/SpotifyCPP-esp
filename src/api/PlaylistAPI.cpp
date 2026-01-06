@@ -13,7 +13,7 @@
 #include "../../include/spotify/util/parse/JsonMapping.hpp"
 #include "../../include/spotify/util/common/Tools.hpp"
 
-#include "nlohmann/json.hpp"
+
 
 namespace Spotify {
 
@@ -159,6 +159,8 @@ namespace Spotify {
 
 
     // --- PUT ---
+#include <ArduinoJson.h>
+
     void PlaylistAPI::changePlaylistDetails(
         const std::string &playlist_id,
         const std::optional<std::string> &name,
@@ -167,22 +169,16 @@ namespace Spotify {
         const std::optional<bool> &is_collaborative) const
     {
         std::string url = Endpoints::PLAYLISTS + "/" + playlist_id;
+        JsonDocument doc;
 
-        nlohmann::json j;
+        if (name.has_value()) doc["name"] = *name;
+        if (is_public.has_value()) doc["public"] = *is_public;
+        if (description.has_value()) doc["description"] = *description;
+        if (is_collaborative.has_value()) doc["collaborative"] = *is_collaborative;
 
-        if (name.has_value())
-            j["name"] = *name;
-
-        if (is_public.has_value())
-            j["public"] = *is_public;
-
-        if (description.has_value())
-            j["description"] = *description;
-
-        if (is_collaborative.has_value())
-            j["collaborative"] = *is_collaborative;
-
-        (void)sendAction("PUT", url, j.dump());
+        std::string body;
+        serializeJson(doc, body);
+        (void)sendAction("PUT", url, body);
     }
 
     void PlaylistAPI::replacePlaylistItems(
@@ -190,13 +186,16 @@ namespace Spotify {
         const std::vector<std::string> &uris) const
     {
         std::string url = Endpoints::PLAYLISTS + "/" + playlist_id + "/tracks";
+        // Spotify expects a JSON array of URIs for the 'uris' key in a PUT request
+        JsonDocument doc;
+        JsonArray array = doc["uris"].to<JsonArray>();
+        for (const auto &uri : uris) {
+            array.add(uri);
+        }
 
-        std::string uri_list = detail::toCSV(uris, 1, 100);
-
-        nlohmann::json j;
-        j["uris"] = uri_list;
-
-        (void)sendAction("PUT", url, j.dump());
+        std::string body;
+        serializeJson(doc, body);
+        (void)sendAction("PUT", url, body);
     }
 
     void PlaylistAPI::reorderPlaylistItems(
@@ -207,20 +206,16 @@ namespace Spotify {
         const std::optional<std::string> &snapshot_id) const
     {
         std::string url = Endpoints::PLAYLISTS + "/" + playlist_id + "/tracks";
+        JsonDocument doc;
 
-        nlohmann::json j;
+        doc["range_start"] = range_start;
+        doc["insert_before"] = insert_before;
+        if (range_length.has_value()) doc["range_length"] = *range_length;
+        if (snapshot_id.has_value()) doc["snapshot_id"] = *snapshot_id;
 
-        j["range_start"] = range_start;
-        j["insert_before"] = insert_before;
-
-        if (range_length.has_value())
-            j["range_length"] = *range_length;
-
-        if (snapshot_id.has_value())
-            j["snapshot_id"] = *snapshot_id;
-
-
-        (void)sendAction("PUT", url, j.dump());
+        std::string body;
+        serializeJson(doc, body);
+        (void)sendAction("PUT", url, body);
     }
 
     void PlaylistAPI::addCustomPlaylistCover(
@@ -267,97 +262,87 @@ namespace Spotify {
 
     // --- POST ---
     void PlaylistAPI::addItemsToPlaylist(
-        const std::string &playlist_id,
-        const std::vector<std::string> &uris,
-        const std::optional<int> &position) const
-    {
-        std::string url = Endpoints::PLAYLISTS + "/" + playlist_id + "/tracks";
-
-        if (uris.empty() || uris.size() > 100) {
-            throw LogicException("You must provide between 1 and 100 URIs.");
-        }
-
-        nlohmann::json j;
-
-        nlohmann::json uri_array = nlohmann::json::array();
-        for (const auto &uri : uris) {
-            uri_array.push_back(uri );
-        }
-
-        j["uris"] = uri_array;
-
-        if (position.has_value())
-            j["position"] = *position;
-
-        (void)sendAction("POST", url, j.dump());
+    const std::string &playlist_id,
+    const std::vector<std::string> &uris,
+    const std::optional<int> &position) const
+{
+    if (uris.empty() || uris.size() > 100) {
+        throw LogicException("You must provide between 1 and 100 URIs.");
     }
 
-
-    std::optional<PlaylistObject> PlaylistAPI::createPlaylist(
-        const std::string &user_id,
-        const std::string &name,
-        const std::optional<bool> &is_public,
-        const std::optional<bool> &is_collaborative,
-        const std::optional<std::string> &description) const
-    {
-        std::string url = Endpoints::USERS + "/" + user_id + "/playlists";
-
-        nlohmann::json j;
-        j["name"] = name;
-
-        if (is_public.has_value())
-            j["public"] = *is_public;
-
-        if (is_collaborative.has_value())
-            j["collaborative"] = *is_collaborative;
-
-        if (description.has_value() && !description->empty())
-            j["description"] = *description;
-
-        auto body = sendAction("POST", url, j.dump());
-
-        if (body.has_value()) {
-            try {
-                auto data = nlohmann::json::parse(*body);
-
-                return data.get<PlaylistObject>();
-            } catch (const std::exception& e) {
-                throw ParseException("Failed to map JSON to PlaylistObject: " + std::string(e.what()), *body);
-            }
-        }
-
-        return std::nullopt;
+    std::string url = Endpoints::PLAYLISTS + "/" + playlist_id + "/tracks";
+    JsonDocument doc;
+    JsonArray array = doc["uris"].to<JsonArray>();
+    for (const auto &uri : uris) {
+        array.add(uri);
     }
 
+    if (position.has_value()) doc["position"] = *position;
 
+    std::string body;
+    serializeJson(doc, body);
+    (void)sendAction("POST", url, body);
+}
 
-    // --- DELETE ---
-    void PlaylistAPI::removePlaylistItems(
-        const std::string &playlist_id,
-        const std::vector<URIObject> &tracks,
-        const std::optional<std::string> &snapshot_id) const
-    {
-        std::string url = Endpoints::PLAYLISTS + "/" + playlist_id + "/tracks";
+std::optional<PlaylistObject> PlaylistAPI::createPlaylist(
+    const std::string &user_id,
+    const std::string &name,
+    const std::optional<bool> &is_public,
+    const std::optional<bool> &is_collaborative,
+    const std::optional<std::string> &description) const
+{
+    std::string url = Endpoints::USERS + "/" + user_id + "/playlists";
+    JsonDocument doc;
 
-        nlohmann::json j;
+    doc["name"] = name;
+    if (is_public.has_value()) doc["public"] = *is_public;
+    if (is_collaborative.has_value()) doc["collaborative"] = *is_collaborative;
+    if (description.has_value() && !description->empty()) doc["description"] = *description;
 
-        nlohmann::json track_array = nlohmann::json::array();
-        for (const auto &track : tracks) {
-            track_array.push_back({ {"uri", track.uri} });
+    std::string requestBody;
+    serializeJson(doc, requestBody);
+
+    // Use the sendAction helper to get the raw response
+    auto responseBody = sendAction("POST", url, requestBody);
+
+    if (responseBody.has_value() && !responseBody->empty()) {
+        // Manually parse the returned PlaylistObject using ArduinoJson
+        JsonDocument responseDoc;
+        DeserializationError error = deserializeJson(responseDoc, *responseBody);
+
+        if (error) {
+            throw ParseException("Failed to parse created playlist JSON", *responseBody);
         }
-        j["tracks"] = track_array;
 
-        if (snapshot_id.has_value() && !snapshot_id->empty())
-            j["snapshot_id"] = *snapshot_id;
-
-        (void)sendAction("DELETE", url, j.dump());
+        PlaylistObject playlist;
+        from_json(responseDoc.as<JsonVariantConst>(), playlist);
+        return playlist;
     }
 
+    return std::nullopt;
+}
 
+void PlaylistAPI::removePlaylistItems(
+    const std::string &playlist_id,
+    const std::vector<URIObject> &tracks,
+    const std::optional<std::string> &snapshot_id) const
+{
+    std::string url = Endpoints::PLAYLISTS + "/" + playlist_id + "/tracks";
+    JsonDocument doc;
+    JsonArray track_array = doc["tracks"].to<JsonArray>();
 
+    for (const auto &track : tracks) {
+        JsonObject obj = track_array.add<JsonObject>();
+        obj["uri"] = track.uri;
+    }
 
+    if (snapshot_id.has_value() && !snapshot_id->empty()) {
+        doc["snapshot_id"] = *snapshot_id;
+    }
 
-
-
+    std::string body;
+    serializeJson(doc, body);
+    (void)sendAction("DELETE", url, body);
+}
 
 }

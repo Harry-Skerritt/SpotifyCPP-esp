@@ -4,6 +4,7 @@
 
 #include "spotify/api/BaseAPI.hpp"
 #include "spotify/core/Client.hpp"
+#include <ArduinoJson.h>
 
 namespace Spotify {
 

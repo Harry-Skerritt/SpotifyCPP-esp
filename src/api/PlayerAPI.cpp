@@ -7,9 +7,6 @@
 #include "spotify/api/PlayerAPI.hpp"
 #include "spotify/core/Endpoints.hpp"
 
-#include "nlohmann/json.hpp"
-
-
 namespace Spotify {
 
     // --- GET ---
@@ -148,52 +145,68 @@ namespace Spotify {
         const std::vector<std::string>& device_ids,
         const std::optional<bool>& play) const
     {
-        if (device_ids.size() != 1) {
-            throw Spotify::LogicException("Device Ids size must be 1");
-        }
-
-        nlohmann::json j;
-        j["device_ids"] = device_ids;
-
-        if (play.has_value()) {
-            j["play"] = *play;
-        }
-
-       (void)sendAction("PUT", Endpoints::PLAYER, j.dump());
+    // Spotify technically allows multiple IDs, but currently only supports 1
+    if (device_ids.size() != 1) {
+        throw Spotify::LogicException("Device Ids size must be 1");
     }
 
-    void PlayerAPI::startPlayback(
-        const std::optional<std::string>& device_id,
-        const std::optional<StartPlaybackProperties>& properties) const
-    {
-        std::string url = Endpoints::PLAYER + "/play";
-        if (device_id.has_value() && !device_id->empty()) {
-            url += "?device_id=" + *device_id;
-        }
+    JsonDocument doc;
+    JsonArray array = doc["device_ids"].to<JsonArray>();
+    for (const auto& id : device_ids) {
+        array.add(id);
+    }
 
-        std::string body = "";
-        if (properties.has_value()) {
-            const auto& props = *properties;
-            nlohmann::json j = nlohmann::json::object();
+    if (play.has_value()) {
+        doc["play"] = *play;
+    }
 
-            if (props.context_uri) j["context_uri"] = *props.context_uri;
-            if (props.uris)  j["uris"] = *props.uris;
+    std::string body;
+    serializeJson(doc, body);
+    (void)sendAction("PUT", Endpoints::PLAYER, body);
+}
 
-            if (props.offset) {
-                try {
-                    j["offset"]["position"] = std::stoi(props.offset->position);
-                } catch (...) {
-                    j["offset"]["position"] = props.offset->position;
-                }
+void PlayerAPI::startPlayback(
+    const std::optional<std::string>& device_id,
+    const std::optional<StartPlaybackProperties>& properties) const
+{
+    std::string url = Endpoints::PLAYER + "/play";
+    if (device_id.has_value() && !device_id->empty()) {
+        url += "?device_id=" + *device_id;
+    }
+
+    std::string body = "";
+    if (properties.has_value()) {
+        const auto& props = *properties;
+        JsonDocument doc;
+
+        if (props.context_uri) doc["context_uri"] = *props.context_uri;
+
+        if (props.uris) {
+            JsonArray uriArray = doc["uris"].to<JsonArray>();
+            for (const auto& uri : *props.uris) {
+                uriArray.add(uri);
             }
-
-            j["position_ms"] = props.position_ms;
-
-            body = j.dump();
         }
 
-        (void)sendAction("PUT", url, body);
+        if (props.offset) {
+            // Build nested offset object: {"offset": {"position": ...}}
+            JsonObject offsetObj = doc["offset"].to<JsonObject>();
+            try {
+                // If it's a numeric string, store it as an int
+                offsetObj["position"] = std::stoi(props.offset->position);
+            } catch (...) {
+                // Otherwise store as raw string (for URI offsets)
+                offsetObj["position"] = props.offset->position;
+            }
+        }
+
+        doc["position_ms"] = props.position_ms;
+
+        serializeJson(doc, body);
     }
+
+    (void)sendAction("PUT", url, body);
+}
 
     void PlayerAPI::pausePlayback(const std::optional<std::string> &device_id) const {
 

@@ -6,7 +6,6 @@
 #include "../../include/spotify/util/common/Tools.hpp"
 #include "spotify/core/Endpoints.hpp"
 
-#include "nlohmann/json.hpp"
 
 namespace Spotify {
 
@@ -148,16 +147,24 @@ namespace Spotify {
 
     // --- PUT ---
     void UsersAPI::followPlaylist(
-        const std::string &playlist_id,
-        const std::optional<bool> &is_public) const
+    const std::string &playlist_id,
+    const std::optional<bool> &is_public) const
     {
         std::string url = Endpoints::PLAYLISTS + "/" + playlist_id + "/followers";
 
-        std::string body;
+        std::string body = "";
         if (is_public.has_value()) {
-            body = nlohmann::json({{"public", *is_public}}).dump();
+            // 1. Create a small document (approx 64 bytes is plenty for one bool)
+            JsonDocument doc;
+
+            // 2. Set the value
+            doc["public"] = *is_public;
+
+            // 3. Serialize to string
+            serializeJson(doc, body);
         }
 
+        // 4. Send the action
         (void)sendAction("PUT", url, body);
     }
 

@@ -5,8 +5,7 @@
 #include "spotify/api/TrackAPI.hpp"
 #include "spotify/core/Endpoints.hpp"
 #include "../../include/spotify/util/common/Tools.hpp"
-
-#include "nlohmann/json.hpp"
+#include <ArduinoJson.h>
 
 namespace Spotify {
 
@@ -82,44 +81,63 @@ namespace Spotify {
 
     // --- PUT ---
     void TrackAPI::saveTracksForUser(const std::vector<std::string> &ids) const {
-        if (ids.empty()) throw Spotify::LogicException("IDs cannot be empty");;
+        if (ids.empty()) throw Spotify::LogicException("IDs cannot be empty");
 
-        nlohmann::json j;
-        j["ids"] = ids;
+        // 1. Create a document. For a simple list of IDs, 2KB is plenty.
+        JsonDocument doc;
 
-        (void)sendAction("PUT", Endpoints::MY_TRACKS, j.dump());
+        // 2. Create the array
+        JsonArray idArray = doc["ids"].to<JsonArray>();
+        for (const auto& id : ids) {
+            idArray.add(id);
+        }
+
+        // 3. Serialize to string
+        std::string body;
+        serializeJson(doc, body);
+
+        (void)sendAction("PUT", Endpoints::MY_TRACKS, body);
     }
 
     void TrackAPI::saveTracksForUser(const std::vector<TimestampIDObject> &timestamped_ids) const {
-        if (timestamped_ids.empty()) throw Spotify::LogicException("IDs cannot be empty");;
+        if (timestamped_ids.empty()) throw Spotify::LogicException("IDs cannot be empty");
         if (timestamped_ids.size() > 50) {
             throw LogicException("You must provide less than 50 timestamped IDs");
         }
 
-        nlohmann::json j = nlohmann::json::object();
-        nlohmann::json ts_array = nlohmann::json::array();
+        // 4. Use a larger document for objects with timestamps
+        JsonDocument doc;
+        JsonArray ts_array = doc["timestamped_ids"].to<JsonArray>();
 
         for (const auto& item : timestamped_ids) {
-            ts_array.push_back({
-            {"id", item.id},
-            {"added_at", item.added_at}
-            });
+            JsonObject obj = ts_array.add<JsonObject>();
+            obj["id"] = item.id;
+            obj["added_at"] = item.added_at;
         }
-        j["timestamped_ids"] = ts_array;
 
-        (void)sendAction("PUT", Endpoints::MY_TRACKS, j.dump());
+        std::string body;
+        serializeJson(doc, body);
+
+        (void)sendAction("PUT", Endpoints::MY_TRACKS, body);
     }
 
     // --- DELETE ---
     void TrackAPI::removeUsersSavedTracks(std::vector<std::string> ids) const {
+        // Spotify's DELETE for saved tracks can accept IDs in the URL query OR the body.
+        // Your original code was doing both.
         std::string id_list = detail::toCSV(ids, 0, 20);
-
         std::string url = Endpoints::MY_TRACKS + "?ids=" + id_list;
 
-        nlohmann::json j;
-        j["ids"] = id_list;
+        JsonDocument doc;
+        JsonArray idArray = doc["ids"].to<JsonArray>();
+        for (const auto& id : ids) {
+            idArray.add(id);
+        }
 
-        (void)sendAction("DELETE", url, j.dump());
+        std::string body;
+        serializeJson(doc, body);
+
+        (void)sendAction("DELETE", url, body);
     }
 
 }

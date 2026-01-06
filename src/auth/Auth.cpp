@@ -83,32 +83,42 @@ namespace Spotify {
 
 
     // --- PRIVATE ---
-    AuthResponse Auth::buildAuthResponse(const std::string &json) {
-        try {
-            auto data = nlohmann::json::parse(json);
-            AuthResponse response;
+    AuthResponse Auth::buildAuthResponse(const std::string &json_str) {
+        // 1. Allocate a buffer for the JSON (Auth responses are small, ~1KB is plenty)
+        JsonDocument doc;
+        DeserializationError error = deserializeJson(doc, json_str);
 
-            response.access_token = data.at("access_token").get<std::string>();
-            response.token_type   = data.at("token_type").get<std::string>();
-            response.scope        = data.at("scope").get<std::string>();
-
-            int expires_in = data.at("expires_in").get<int>();
-            response.expire_time = std::chrono::system_clock::now() + std::chrono::seconds(expires_in);
-
-            if (data.contains("refresh_token")) {
-                m_refresh_token = data.at("refresh_token").get<std::string>();
-                response.refresh_token = m_refresh_token;
-            } else {
-                // Keep the existing refresh token if a new one wasn't sent
-                response.refresh_token = m_refresh_token;
-            }
-
-            response.response_code = HTTPStatus_Code::OK;
-            m_authResponse = response;
-            return response;
-        } catch (const nlohmann::json::exception &e) {
-            throw Spotify::ParseException("Failed to build AuthResponse: " + std::string(e.what()), json);
+        // 2. Handle Parse Errors (Replaces catch block)
+        if (error) {
+            throw Spotify::ParseException("Failed to build AuthResponse: " + std::string(error.c_str()), json_str);
         }
+
+        AuthResponse response;
+
+        // 3. Map basic fields with safe fallbacks
+        response.access_token = doc["access_token"] | "";
+        response.token_type   = doc["token_type"] | "";
+        response.scope        = doc["scope"] | "";
+
+        // 4. Handle Expiration Time
+        int expires_in = doc["expires_in"] | 3600; // Default to 1 hour if missing
+        response.expire_time = std::chrono::system_clock::now() + std::chrono::seconds(expires_in);
+
+        // 5. Handle Refresh Token
+        // Spotify only sends a refresh_token on the first authorization, not on refreshes
+        if (doc.containsKey("refresh_token")) {
+            m_refresh_token = doc["refresh_token"].as<std::string>();
+            response.refresh_token = m_refresh_token;
+        } else {
+            // Carry over the existing token from our class member
+            response.refresh_token = m_refresh_token;
+        }
+
+        response.response_code = HTTPStatus_Code::OK;
+        response.response_code = HTTPStatus_Code::OK;
+        m_authResponse = response;
+
+        return response;
     }
 
     // HELPERS
