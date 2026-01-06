@@ -6,7 +6,9 @@
 #include "../../include/spotify/util/common/Tools.hpp"
 #include "spotify/core/Errors.hpp"
 
-#include "nlohmann/json.hpp"
+#include <iomanip>
+#include <iterator>
+#include <cctype>
 
 
 namespace Spotify {
@@ -58,14 +60,21 @@ namespace Spotify {
         if (market.length() != 2) return false;
 
         std::string upper = market;
-        std::ranges::transform(upper, upper.begin(), ::toupper);
-        return std::ranges::binary_search(valid_markets, upper);
+        std::transform(upper.begin(), upper.end(), upper.begin(),
+                       [](unsigned char c){ return std::toupper(c); });
+
+        // std::begin(array) works on both C-style arrays and vectors
+        return std::binary_search(std::begin(valid_markets), std::end(valid_markets), upper);
     }
 
     std::string Tools::getISOTimestamp() {
         auto now = std::chrono::system_clock::now();
+        std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 
-        return std::format("{:%FT%TZ}", std::chrono::floor<std::chrono::seconds>(now));
+        char buf[25]; // Enough for "YYYY-MM-DDTHH:MM:SSZ"
+        std::strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%SZ", std::gmtime(&now_c));
+
+        return std::string(buf);
     }
 
     std::string Tools::formatMs(long long ms) {
