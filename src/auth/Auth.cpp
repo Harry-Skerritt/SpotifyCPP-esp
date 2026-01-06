@@ -73,6 +73,22 @@ namespace Spotify {
         buildAuthResponse(result.body);
     }
 
+
+    bool Auth::begin(const std::string &refreshToken) {
+        if (refreshToken.empty()) return false;
+
+        m_refresh_token = refreshToken;
+
+        try {
+            refreshAccessToken();
+            return true;
+
+        } catch (const Spotify::Exception& e) {
+            return false;
+        }
+    }
+
+
     // Getters
     std::string Auth::getAccessToken() {
         if (isTokenExpired()) {
@@ -81,14 +97,16 @@ namespace Spotify {
         return m_authResponse.access_token;
     }
 
+    std::string Auth::getRefreshToken() {
+        return m_refresh_token;
+    }
+
 
     // --- PRIVATE ---
     AuthResponse Auth::buildAuthResponse(const std::string &json_str) {
-        // 1. Allocate a buffer for the JSON (Auth responses are small, ~1KB is plenty)
         JsonDocument doc;
         DeserializationError error = deserializeJson(doc, json_str);
 
-        // 2. Handle Parse Errors (Replaces catch block)
         if (error) {
             throw Spotify::ParseException("Failed to build AuthResponse: " + std::string(error.c_str()), json_str);
         }
@@ -114,7 +132,6 @@ namespace Spotify {
             response.refresh_token = m_refresh_token;
         }
 
-        response.response_code = HTTPStatus_Code::OK;
         response.response_code = HTTPStatus_Code::OK;
         m_authResponse = response;
 

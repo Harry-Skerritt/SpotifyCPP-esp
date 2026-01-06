@@ -47,9 +47,15 @@ namespace Spotify {
         void refreshAccessToken(const std::optional<std::string>& refresh_token = std::nullopt);
 
 
+        /// Taken an input refresh token and check if it is valid
+        bool begin(const std::string& refreshToken);
+
         // Getters
         /// Returns the current access token
         std::string getAccessToken();
+
+        /// Returns the refresh token
+        std::string getRefreshToken();
 
         private:
         AuthResponse buildAuthResponse(const std::string& json);
