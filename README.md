@@ -2,7 +2,7 @@
 
 ## The esp branch!
 
-[![PlatformIO Registry](https://badges.registry.platformio.org/packages/harryskerritt/library/SpotifyCPP.svg)](https://registry.platformio.org/libraries/harryskerritt/SpotifyCPP)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/harryskerritt/library/SpotifyCPP-esp.svg)](https://registry.platformio.org/libraries/harryskerritt/SpotifyCPP-esp)
 
 A modern, high-performance **C++ library for the Spotify Web API**. Designed to be lightweight and intuitive, this library provides comprehensive access to Spotify's ecosystem—from catalog metadata to real-time player controls.
 
@@ -23,7 +23,7 @@ Built for developers who want a "no-nonsense" interface to Spotify without the o
 
 ---
 
-## Current Version: v0.9.3
+## Current Version: v0.9.4
 
 ### What will be in v1.0.0
 - Documentation needs finalising
