@@ -5,7 +5,7 @@
   "keywords": ["embedded", "platformio", "spotify", "api", "spotify-web-api", "spotifycpp", "spotifyc++", "esp32"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Harry-Skerritt/SpotifyCPP"
+    "url": "https://github.com/Harry-Skerritt/SpotifyCPP-esp"
   },
   "authors": [
     {
