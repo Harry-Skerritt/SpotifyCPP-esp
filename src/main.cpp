@@ -9,6 +9,4 @@ void setup() {
     Serial.println("Spotify Library Compiled Successfully!");
 }
 
-void loop() {
-    // Your Spotify logic will go here later
-}
+void loop() { }

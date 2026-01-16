@@ -1,6 +1,6 @@
 {
   "name": "SpotifyCPP-esp",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "ESP32 optimized build of SpotifyCPP",
   "keywords": ["embedded", "platformio", "spotify", "api", "spotify-web-api", "spotifycpp", "spotifyc++", "esp32"],
   "repository": {

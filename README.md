@@ -23,7 +23,8 @@ Built for developers who want a "no-nonsense" interface to Spotify without the o
 
 ---
 
-## Current Version: v0.9.4
+## Current Version: v0.9.5
+Added the Average and Vibrant colours
 
 ### What will be in v1.0.0
 - Documentation needs finalising
